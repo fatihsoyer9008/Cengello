@@ -15,6 +15,12 @@ class CustomFieldCreate(CustomFieldBase):
     board_id: uuid.UUID
 
 
+class CustomFieldUpdate(BaseModel):
+    name: str | None = None
+    config: dict | None = None
+    position: float | None = None
+
+
 class CustomFieldRead(CustomFieldBase):
     model_config = ConfigDict(from_attributes=True)
 

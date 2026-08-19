@@ -39,3 +39,10 @@ class AutomationRuleRead(AutomationRuleBase):
     board_id: uuid.UUID
     created_by: uuid.UUID
     actions: list[AutomationActionRead] = []
+
+
+class AutomationRuleUpdate(BaseModel):
+    name: str | None = None
+    trigger_type: str | None = None
+    trigger_config: dict | None = None
+    is_enabled: bool | None = None

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from app.models.enums import WorkspaceRole
 
@@ -13,6 +13,11 @@ class WorkspaceBase(BaseModel):
 
 class WorkspaceCreate(WorkspaceBase):
     slug: str
+
+
+class WorkspaceUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
 
 
 class WorkspaceRead(WorkspaceBase):
@@ -30,4 +35,13 @@ class WorkspaceMemberRead(BaseModel):
     id: uuid.UUID
     workspace_id: uuid.UUID
     user_id: uuid.UUID
+    role: WorkspaceRole
+
+
+class WorkspaceMemberCreate(BaseModel):
+    email: EmailStr
+    role: WorkspaceRole = WorkspaceRole.member
+
+
+class WorkspaceMemberUpdate(BaseModel):
     role: WorkspaceRole

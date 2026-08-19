@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     jwt_refresh_ttl_days: int = 30
 
     uploads_dir: str = "/app/uploads"
+    max_upload_size_bytes: int = 26_214_400
+
+    cookie_secure: bool = True
 
     @property
     def database_url(self) -> str:

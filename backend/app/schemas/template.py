@@ -24,3 +24,28 @@ class TemplateRead(TemplateBase):
     workspace_id: uuid.UUID | None
     snapshot: dict
     created_by: uuid.UUID
+
+
+class TemplateCaptureBoardRequest(BaseModel):
+    name: str
+    description: str | None = None
+    workspace_id: uuid.UUID
+    is_public: bool = False
+
+
+class TemplateCaptureCardRequest(BaseModel):
+    name: str
+    description: str | None = None
+    workspace_id: uuid.UUID
+    is_public: bool = False
+
+
+class TemplateApplyRequest(BaseModel):
+    workspace_id: uuid.UUID | None = None
+    list_id: uuid.UUID | None = None
+    name: str | None = None
+
+
+class TemplateApplyResult(BaseModel):
+    board_id: uuid.UUID | None = None
+    card_id: uuid.UUID | None = None
