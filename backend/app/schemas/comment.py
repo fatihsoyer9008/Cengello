@@ -12,6 +12,10 @@ class CommentCreate(CommentBase):
     card_id: uuid.UUID
 
 
+class CommentUpdate(BaseModel):
+    body: str
+
+
 class CommentRead(CommentBase):
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from app.models.enums import BoardRole
 
@@ -14,6 +14,13 @@ class BoardBase(BaseModel):
 
 class BoardCreate(BoardBase):
     workspace_id: uuid.UUID
+
+
+class BoardUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    background: str | None = None
+    is_archived: bool | None = None
 
 
 class BoardRead(BoardBase):
@@ -33,4 +40,13 @@ class BoardMemberRead(BaseModel):
     id: uuid.UUID
     board_id: uuid.UUID
     user_id: uuid.UUID
+    role: BoardRole
+
+
+class BoardMemberCreate(BaseModel):
+    email: EmailStr
+    role: BoardRole = BoardRole.member
+
+
+class BoardMemberUpdate(BaseModel):
     role: BoardRole
