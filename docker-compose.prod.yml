@@ -1,0 +1,37 @@
+services:
+  db:
+    restart: unless-stopped
+    ports: []
+
+  backend:
+    restart: unless-stopped
+    volumes:
+      - uploads_data:/app/uploads
+    ports: []
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    restart: unless-stopped
+    volumes: []
+    ports: []
+    build:
+      context: ./frontend
+      target: runner
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  caddy_data:
+  caddy_config:
