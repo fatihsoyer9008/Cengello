@@ -4,13 +4,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    postgres_user: str = "cengello"
-    postgres_password: str = "cengello"
-    postgres_db: str = "cengello"
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
     postgres_host: str = "db"
     postgres_port: int = 5432
 
-    jwt_secret_key: str = "change-me"
+    jwt_secret_key: str
     jwt_algorithm: str = "HS256"
     jwt_access_ttl_min: int = 20
     jwt_refresh_ttl_days: int = 30
