@@ -22,7 +22,7 @@
 
 **Cengello** is a full-stack, self-hosted project-management tool built from the ground up as a learning project and portfolio piece. It reproduces the core workflow of a modern Kanban tool — workspaces, boards, colored lists, draggable cards, checklists, labels, due dates, attachments, and a live activity feed — behind your own Docker Compose stack.
 
-It's built with a real production-style architecture: a typed FastAPI backend backed by PostgreSQL and Alembic migrations, a Next.js/React frontend styled with Tailwind CSS, and a Docker Compose setup ready to deploy behind Caddy on a Hetzner VPS.
+It's built with a real production-style architecture: a typed FastAPI backend backed by PostgreSQL and Alembic migrations, and a Next.js/React frontend styled with Tailwind CSS — all wired together with Docker Compose, so anyone can spin up the entire stack on their own machine with a couple of commands. No hosted version to sign up for; you run it yourself.
 
 > 🖼️ **Screenshot / Demo**
 >
@@ -68,9 +68,7 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 - 🧪 `pytest` + `httpx` for the test suite
 
 **DevOps / Infrastructure**
-- 🐳 **Docker & Docker Compose** for local dev and deployment
-- 🌐 **Caddy** as a reverse proxy with automatic HTTPS (production)
-- ☁️ Optimized for deployment on a **Hetzner VPS** (or any Docker-capable host)
+- 🐳 **Docker & Docker Compose** — the whole stack (frontend, backend, database) runs with one command
 
 ---
 
@@ -105,13 +103,10 @@ JWT_SECRET_KEY=change-me-to-a-long-random-value
 JWT_ACCESS_TTL_MIN=20
 JWT_REFRESH_TTL_DAYS=30
 
-# false for local http dev, true (default) in production behind HTTPS
-COOKIE_SECURE=true
+# local dev runs over plain http, so this stays false
+COOKIE_SECURE=false
 
 NEXT_PUBLIC_API_URL=http://localhost:8000
-
-# production only (docker-compose.prod.yml + Caddy)
-DOMAIN=example.com
 ```
 
 > ⚠️ **Never commit your real `.env` file.** It's already covered by `.gitignore` — double-check before pushing.
@@ -156,32 +151,13 @@ docker compose run --rm backend alembic upgrade head
 
 ---
 
-## ☁️ Production Deployment (Hetzner VPS)
-
-```bash
-cp .env.example .env   # set real secrets and your DOMAIN
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-docker compose run --rm backend alembic upgrade head
-```
-
-`docker-compose.prod.yml` builds production images (no source bind-mounts), sets `restart: unless-stopped`, and adds a **Caddy** reverse proxy in front of the frontend/backend with automatic HTTPS via your `DOMAIN`.
-
-### 👥 Sharing one database across a team
-
-Want a teammate developing against the same data instead of everyone getting their own local Postgres? See [`docs/remote-database-setup.md`](docs/remote-database-setup.md) for tunneling into a shared Postgres instance on your VPS over SSH (without exposing `5432` to the internet).
-
----
-
 ## 📁 Project Layout
 
 ```
 cengello/
 ├── backend/            FastAPI app, SQLAlchemy models, Alembic migrations, pytest suite
 ├── frontend/           Next.js app (App Router), Tailwind CSS, React Query
-├── infra/              Caddyfile for the production reverse proxy
-├── docs/               Supplementary guides (e.g. remote-database-setup.md)
 ├── docker-compose.yml
-├── docker-compose.prod.yml
 ├── .env.example
 └── LICENSE
 ```
