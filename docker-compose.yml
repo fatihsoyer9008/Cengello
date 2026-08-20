@@ -34,6 +34,12 @@ services:
   frontend:
     build: ./frontend
     env_file: .env
+    environment:
+      # Docker Desktop's bind mount on Windows doesn't reliably forward inotify
+      # events into the container, so Next.js's file watcher misses host edits
+      # without polling -- this trades a bit of CPU for hot reload actually working.
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - backend
     volumes:

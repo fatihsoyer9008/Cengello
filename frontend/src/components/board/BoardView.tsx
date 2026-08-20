@@ -18,7 +18,7 @@ import { ListColumn } from "@/components/board/ListColumn";
 import { useBoardData } from "@/hooks/useBoardData";
 import { useMoveCard } from "@/hooks/useMoveCard";
 import { useMoveList } from "@/hooks/useMoveList";
-import type { Card } from "@/types/card";
+import type { CardSummary } from "@/types/card";
 
 interface DragMeta {
   type: "card" | "list";
@@ -29,7 +29,7 @@ export function BoardView({ boardId }: { boardId: string }) {
   const { lists, cardsByList, isLoading, isError } = useBoardData(boardId);
   const moveCard = useMoveCard(boardId);
   const moveList = useMoveList(boardId);
-  const [activeCard, setActiveCard] = useState<Card | null>(null);
+  const [activeCard, setActiveCard] = useState<CardSummary | null>(null);
   const [activeListName, setActiveListName] = useState<string | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));

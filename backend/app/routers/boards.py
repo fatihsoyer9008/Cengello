@@ -17,7 +17,7 @@ from app.schemas.board import (
     BoardRead,
     BoardUpdate,
 )
-from app.schemas.card import CardListFilters, CardRead
+from app.schemas.card import CardListFilters, CardRead, CardSummary
 from app.schemas.custom_field import CustomFieldRead
 from app.schemas.label import LabelRead
 from app.schemas.list import ListRead
@@ -82,6 +82,11 @@ def list_lists(include_archived: bool = False, board: Board = Depends(get_board_
 @router.get("/boards/{board_id}/cards", response_model=list[CardRead])
 def list_cards(filters: CardListFilters = Depends(), board: Board = Depends(get_board_and_check_role(BoardRole.viewer)), db: Session = Depends(get_db)):
     return card_service.list_board_cards(db, board.id, filters)
+
+
+@router.get("/boards/{board_id}/cards/summary", response_model=list[CardSummary])
+def list_cards_summary(filters: CardListFilters = Depends(), board: Board = Depends(get_board_and_check_role(BoardRole.viewer)), db: Session = Depends(get_db)):
+    return card_service.list_board_cards_summary(db, board.id, filters)
 
 
 @router.get("/boards/{board_id}/labels", response_model=list[LabelRead])

@@ -5,7 +5,7 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 const VARIANT_CLASSES: Record<Variant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300",
+  primary: "bg-brand text-white hover:bg-brand-dark disabled:bg-blue-300",
   secondary: "bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:text-gray-400",
   ghost: "bg-transparent text-gray-700 hover:bg-gray-100 disabled:text-gray-400",
   danger: "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300",

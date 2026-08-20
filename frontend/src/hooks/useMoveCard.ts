@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { cardsApi } from "@/lib/api/cards";
-import type { Card } from "@/types/card";
+import type { CardSummary } from "@/types/card";
 
 interface MoveCardArgs {
   cardId: string;
@@ -10,7 +10,7 @@ interface MoveCardArgs {
   afterId: string | null;
 }
 
-function estimatePosition(cards: Card[], beforeId: string | null, afterId: string | null): number {
+function estimatePosition(cards: CardSummary[], beforeId: string | null, afterId: string | null): number {
   const before = beforeId ? cards.find((c) => c.id === beforeId) : undefined;
   const after = afterId ? cards.find((c) => c.id === afterId) : undefined;
   if (before && after) return (before.position + after.position) / 2;
@@ -29,12 +29,12 @@ export function useMoveCard(boardId: string) {
 
     onMutate: async ({ cardId, listId, beforeId, afterId }) => {
       await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<Card[]>(queryKey);
+      const previous = queryClient.getQueryData<CardSummary[]>(queryKey);
       if (previous) {
         const siblings = previous.filter((c) => c.list_id === listId && c.id !== cardId);
         const newPosition = estimatePosition(siblings, beforeId, afterId);
         const next = previous.map((c) => (c.id === cardId ? { ...c, list_id: listId, position: newPosition } : c));
-        queryClient.setQueryData<Card[]>(queryKey, next);
+        queryClient.setQueryData<CardSummary[]>(queryKey, next);
       }
       return { previous };
     },
@@ -48,11 +48,11 @@ export function useMoveCard(boardId: string) {
         queryClient.invalidateQueries({ queryKey });
         return;
       }
-      const current = queryClient.getQueryData<Card[]>(queryKey);
+      const current = queryClient.getQueryData<CardSummary[]>(queryKey);
       if (current) {
-        queryClient.setQueryData<Card[]>(
+        queryClient.setQueryData<CardSummary[]>(
           queryKey,
-          current.map((c) => (c.id === result.card.id ? result.card : c))
+          current.map((c) => (c.id === result.card.id ? { ...c, ...result.card } : c))
         );
       }
     },

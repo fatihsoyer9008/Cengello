@@ -46,6 +46,14 @@ export interface CardCoverUpdate {
   attachment_id: string | null;
 }
 
+export interface CardSummary extends Card {
+  label_ids: string[];
+  assignee_ids: string[];
+  checklist_total: number;
+  checklist_completed: number;
+  comment_count: number;
+}
+
 export interface CardListFilters {
   list_id?: string;
   due_after?: string;

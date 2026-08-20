@@ -1,14 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 
-import { TopNav } from "@/components/layout/TopNav";
+import { AppShell } from "@/components/layout/AppShell";
 import { useAuth } from "@/lib/auth/auth-context";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { status } = useAuth();
   const router = useRouter();
+  const params = useParams<{ workspaceId?: string }>();
 
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
@@ -22,10 +23,5 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  return (
-    <div className="min-h-screen">
-      <TopNav />
-      {children}
-    </div>
-  );
+  return <AppShell workspaceId={params.workspaceId}>{children}</AppShell>;
 }

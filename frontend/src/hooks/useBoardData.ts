@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 import { boardsApi } from "@/lib/api/boards";
-import type { Card } from "@/types/card";
+import type { CardSummary } from "@/types/card";
 
 export function useBoardData(boardId: string) {
   const listsQuery = useQuery({
@@ -13,12 +13,12 @@ export function useBoardData(boardId: string) {
 
   const cardsQuery = useQuery({
     queryKey: ["boards", boardId, "cards"],
-    queryFn: () => boardsApi.cards(boardId, { is_archived: false }),
+    queryFn: () => boardsApi.cardsSummary(boardId, { is_archived: false }),
     enabled: !!boardId,
   });
 
   const cardsByList = useMemo(() => {
-    const grouped: Record<string, Card[]> = {};
+    const grouped: Record<string, CardSummary[]> = {};
     for (const card of cardsQuery.data ?? []) {
       (grouped[card.list_id] ??= []).push(card);
     }

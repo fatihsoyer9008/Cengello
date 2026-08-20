@@ -2,7 +2,7 @@ import { apiFetch } from "@/lib/api/client";
 import type { ActivityLogEntry } from "@/types/activity";
 import type { AutomationRule } from "@/types/automation";
 import type { Board, BoardCreate, BoardMember, BoardMemberCreate, BoardMemberUpdate, BoardUpdate } from "@/types/board";
-import type { Card, CardListFilters } from "@/types/card";
+import type { Card, CardListFilters, CardSummary } from "@/types/card";
 import type { CustomField } from "@/types/customField";
 import type { Label } from "@/types/label";
 import type { BoardList } from "@/types/list";
@@ -23,6 +23,8 @@ export const boardsApi = {
     apiFetch<BoardList[]>(`/boards/${id}/lists${toQuery({ include_archived: includeArchived })}`),
   cards: (id: string, filters: CardListFilters = {}) =>
     apiFetch<Card[]>(`/boards/${id}/cards${toQuery(filters as Record<string, string | boolean | undefined>)}`),
+  cardsSummary: (id: string, filters: CardListFilters = {}) =>
+    apiFetch<CardSummary[]>(`/boards/${id}/cards/summary${toQuery(filters as Record<string, string | boolean | undefined>)}`),
   labels: (id: string) => apiFetch<Label[]>(`/boards/${id}/labels`),
   customFields: (id: string) => apiFetch<CustomField[]>(`/boards/${id}/custom-fields`),
   automationRules: (id: string) => apiFetch<AutomationRule[]>(`/boards/${id}/automation-rules`),

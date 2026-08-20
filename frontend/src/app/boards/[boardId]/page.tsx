@@ -1,13 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useParams, useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import { BoardView } from "@/components/board/BoardView";
 import { CardDetailModal } from "@/components/card-modal/CardDetailModal";
-import { TopNav } from "@/components/layout/TopNav";
+import { AppShell } from "@/components/layout/AppShell";
 import { boardsApi } from "@/lib/api/boards";
 import { useAuth } from "@/lib/auth/auth-context";
 
@@ -39,45 +38,12 @@ export default function BoardPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col" style={{ backgroundColor: board?.background || "#f3f4f6" }}>
-      <TopNav />
-      <div className="flex items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-3">
-          <Link href={`/workspaces/${board?.workspace_id ?? ""}/boards`} className="text-sm text-gray-700 hover:underline">
-            ←
-          </Link>
-          <h1 className="text-lg font-semibold text-gray-900">{board?.name}</h1>
-        </div>
-        <div className="flex gap-3 text-sm">
-          <Link href={`/boards/${boardId}/settings/labels`} className="text-gray-700 hover:underline">
-            Labels
-          </Link>
-          <Link href={`/boards/${boardId}/settings/custom-fields`} className="text-gray-700 hover:underline">
-            Custom fields
-          </Link>
-          <Link href={`/boards/${boardId}/settings/members`} className="text-gray-700 hover:underline">
-            Members
-          </Link>
-          <Link href={`/boards/${boardId}/settings/automation`} className="text-gray-700 hover:underline">
-            Automation
-          </Link>
-          <Link href={`/boards/${boardId}/settings/templates`} className="text-gray-700 hover:underline">
-            Templates
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-hidden">
+    <AppShell boardId={boardId} workspaceId={board?.workspace_id} title={board?.name}>
+      <div className="h-full pt-4">
         <BoardView boardId={boardId} />
       </div>
 
-      {cardId && (
-        <CardDetailModal
-          boardId={boardId}
-          cardId={cardId}
-          onClose={() => router.push(pathname)}
-        />
-      )}
-    </div>
+      {cardId && <CardDetailModal boardId={boardId} cardId={cardId} onClose={() => router.push(pathname)} />}
+    </AppShell>
   );
 }

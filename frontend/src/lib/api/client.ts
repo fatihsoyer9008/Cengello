@@ -72,7 +72,8 @@ export async function apiFetch<T>(
     credentials: "include",
   });
 
-  if (res.status === 401 && !_isRetry && !path.startsWith("/auth/")) {
+  const skipRefreshOn401 = path === "/auth/login" || path === "/auth/register" || path === "/auth/refresh";
+  if (res.status === 401 && !_isRetry && !skipRefreshOn401) {
     const refreshed = await refreshAccessToken();
     if (refreshed) {
       return apiFetch<T>(path, options, true);
