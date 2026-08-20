@@ -49,6 +49,60 @@ def list_board_cards(db: Session, board_id: uuid.UUID, filters: CardListFilters)
     return query.order_by(Card.position).all()
 
 
+def list_board_cards_summary(db: Session, board_id: uuid.UUID, filters: CardListFilters) -> list[dict]:
+    """Same card set as list_board_cards, annotated with the lightweight per-card
+    aggregates the Kanban board tile needs (labels, assignees, checklist progress,
+    comment count) via a handful of bulk queries -- not one query per card."""
+    from sqlalchemy import func
+
+    from app.models.checklist import Checklist, ChecklistItem
+    from app.models.comment import Comment
+
+    cards = list_board_cards(db, board_id, filters)
+    card_ids = [c.id for c in cards]
+    if not card_ids:
+        return []
+
+    label_ids_by_card: dict[uuid.UUID, list[uuid.UUID]] = {}
+    for card_id, label_id in db.query(CardLabel.card_id, CardLabel.label_id).filter(CardLabel.card_id.in_(card_ids)):
+        label_ids_by_card.setdefault(card_id, []).append(label_id)
+
+    assignee_ids_by_card: dict[uuid.UUID, list[uuid.UUID]] = {}
+    for card_id, user_id in db.query(CardMember.card_id, CardMember.user_id).filter(CardMember.card_id.in_(card_ids)):
+        assignee_ids_by_card.setdefault(card_id, []).append(user_id)
+
+    # Aggregated in Python rather than a SQL boolean-sum, which needs a dialect-specific
+    # cast -- checklist counts per board are small enough that this is not worth it.
+    checklist_counts: dict[uuid.UUID, tuple[int, int]] = {}
+    checklist_id_to_card: dict[uuid.UUID, uuid.UUID] = dict(
+        db.query(Checklist.id, Checklist.card_id).filter(Checklist.card_id.in_(card_ids)).all()
+    )
+    if checklist_id_to_card:
+        for checklist_id, is_complete in db.query(ChecklistItem.checklist_id, ChecklistItem.is_complete).filter(
+            ChecklistItem.checklist_id.in_(checklist_id_to_card.keys())
+        ):
+            card_id = checklist_id_to_card[checklist_id]
+            total, completed = checklist_counts.get(card_id, (0, 0))
+            checklist_counts[card_id] = (total + 1, completed + (1 if is_complete else 0))
+
+    comment_counts: dict[uuid.UUID, int] = dict(
+        db.query(Comment.card_id, func.count(Comment.id)).filter(Comment.card_id.in_(card_ids)).group_by(Comment.card_id).all()
+    )
+
+    summaries = []
+    for card in cards:
+        total, completed = checklist_counts.get(card.id, (0, 0))
+        summaries.append({
+            **{col.name: getattr(card, col.name) for col in Card.__table__.columns},
+            "label_ids": label_ids_by_card.get(card.id, []),
+            "assignee_ids": assignee_ids_by_card.get(card.id, []),
+            "checklist_total": total,
+            "checklist_completed": completed,
+            "comment_count": comment_counts.get(card.id, 0),
+        })
+    return summaries
+
+
 def create_card(db: Session, actor: User, data: CardCreate, trigger_automation: bool = True) -> Card:
     list_obj = _get_list_or_404(db, data.list_id)
     assert_board_role(db, actor.id, list_obj.board_id, BoardRole.member)

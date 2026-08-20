@@ -53,6 +53,14 @@ class CardCoverUpdate(BaseModel):
     attachment_id: uuid.UUID | None = None
 
 
+class CardSummary(CardRead):
+    label_ids: list[uuid.UUID] = []
+    assignee_ids: list[uuid.UUID] = []
+    checklist_total: int = 0
+    checklist_completed: int = 0
+    comment_count: int = 0
+
+
 class CardListFilters(BaseModel):
     list_id: uuid.UUID | None = None
     due_after: datetime | None = None
