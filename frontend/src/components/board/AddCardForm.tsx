@@ -24,7 +24,7 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full rounded-md px-2 py-1.5 text-left text-sm text-gray-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
+        className="w-full rounded-md px-2 py-1.5 text-left text-sm text-white/80 hover:bg-black/10 hover:text-white"
       >
         + Kart ekle
       </button>

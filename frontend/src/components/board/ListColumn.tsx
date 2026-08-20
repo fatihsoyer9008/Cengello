@@ -3,12 +3,14 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import * as RadixPopover from "@radix-ui/react-popover";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Check } from "lucide-react";
 import { useState } from "react";
 
 import { AddCardForm } from "@/components/board/AddCardForm";
 import { CardTile } from "@/components/board/CardTile";
-import { DropdownMenu } from "@/components/ui/DropdownMenu";
+import { Popover } from "@/components/ui/Popover";
 import { Input } from "@/components/ui/Input";
 import { LIST_COLOR_PALETTE, getListColor } from "@/lib/board-theme";
 import { listsApi } from "@/lib/api/lists";
@@ -59,19 +61,16 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
 
   const cardIds = cards.map((c) => c.id);
   const listColor = getListColor(list);
+  const menuItemClass =
+    "w-full rounded px-2.5 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10";
 
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className="flex h-fit w-72 shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-sm dark:bg-black/25 dark:backdrop-blur-sm"
+      style={{ ...style, backgroundColor: listColor }}
+      className="flex h-fit w-72 shrink-0 flex-col overflow-hidden rounded-xl shadow-sm"
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="flex cursor-grab items-center gap-2 px-3 py-2.5"
-        style={{ backgroundColor: listColor }}
-      >
+      <div {...attributes} {...listeners} className="flex cursor-grab items-center gap-2 px-3 py-2.5">
         {editing ? (
           <form
             onSubmit={(e) => {
@@ -94,7 +93,7 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
           </h3>
         )}
         <span className="shrink-0 rounded-full bg-black/25 px-2 py-0.5 text-xs font-bold text-white">{cards.length}</span>
-        <DropdownMenu
+        <Popover
           trigger={
             <button
               className="shrink-0 rounded px-1.5 py-1 text-white/80 hover:bg-black/20 hover:text-white"
@@ -102,16 +101,49 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
               •••
             </button>
           }
-          items={[
-            { label: "Listeyi yeniden adlandır", onSelect: () => setEditing(true) },
-            ...LIST_COLOR_PALETTE.map((c) => ({ label: `Renk: ${c.name}`, onSelect: () => setColor.mutate(c.value) })),
-            { label: "Listeyi arşivle", onSelect: () => archiveList.mutate() },
-            { label: "Listeyi sil", onSelect: () => deleteList.mutate(), destructive: true },
-          ]}
-        />
+        >
+          <div className="space-y-0.5">
+            <RadixPopover.Close asChild>
+              <button className={menuItemClass} onClick={() => setEditing(true)}>
+                Listeyi yeniden adlandır
+              </button>
+            </RadixPopover.Close>
+            <RadixPopover.Close asChild>
+              <button className={menuItemClass} onClick={() => archiveList.mutate()}>
+                Listeyi arşivle
+              </button>
+            </RadixPopover.Close>
+            <RadixPopover.Close asChild>
+              <button
+                className={`${menuItemClass} text-red-600 dark:text-red-400`}
+                onClick={() => deleteList.mutate()}
+              >
+                Listeyi sil
+              </button>
+            </RadixPopover.Close>
+          </div>
+
+          <div className="mt-3 border-t border-gray-200 pt-3 dark:border-white/10">
+            <p className="mb-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400">Liste rengini değiştir</p>
+            <div className="grid grid-cols-5 gap-1.5">
+              {LIST_COLOR_PALETTE.map((c) => (
+                <button
+                  key={c.value}
+                  onClick={() => setColor.mutate(c.value)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md transition hover:opacity-80"
+                  style={{ backgroundColor: c.value }}
+                  aria-label={c.name}
+                  title={c.name}
+                >
+                  {listColor === c.value && <Check className="h-4 w-4 text-white" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Popover>
       </div>
 
-      <div ref={setDroppableRef} className="flex-1 space-y-2 px-2.5 pb-2 pt-2">
+      <div ref={setDroppableRef} className="flex-1 space-y-2 px-2.5 pb-2 pt-1">
         <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
           {cards.map((card) => (
             <CardTile key={card.id} boardId={boardId} card={card} />

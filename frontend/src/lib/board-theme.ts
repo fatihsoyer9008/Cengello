@@ -23,12 +23,16 @@ const USER_COLORS = [
 ];
 
 export const LIST_COLOR_PALETTE: { name: string; value: string }[] = [
-  { name: "Altın", value: "#B08D2B" },
-  { name: "Yeşil", value: "#3E7B4F" },
-  { name: "Lacivert", value: "#1E3A6E" },
-  { name: "Mavi", value: "#2E5FA3" },
-  { name: "Mor", value: "#6D4AA0" },
-  { name: "Pembe", value: "#B0417E" },
+  { name: "Yeşil", value: "#1F845A" },
+  { name: "Altın", value: "#946F00" },
+  { name: "Turuncu", value: "#C25100" },
+  { name: "Kırmızı", value: "#AE2E24" },
+  { name: "Mor", value: "#6E5DC6" },
+  { name: "Mavi", value: "#0C66E4" },
+  { name: "Gök Mavisi", value: "#227D9B" },
+  { name: "Zeytin Yeşili", value: "#4C6B1F" },
+  { name: "Pembe", value: "#943D73" },
+  { name: "Gri", value: "#626F86" },
 ];
 
 function hash(input: string): number {
