@@ -5,23 +5,13 @@ import type { ReactNode } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 
-export function AppShell({
-  workspaceId,
-  boardId,
-  title,
-  children,
-}: {
-  workspaceId?: string;
-  boardId?: string;
-  title?: string;
-  children: ReactNode;
-}) {
+export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-surface dark:bg-gray-900">
-      <Sidebar workspaceId={workspaceId} boardId={boardId} />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header title={title} />
-        <div className="flex-1 overflow-auto">{children}</div>
+    <div className="flex h-screen flex-col overflow-hidden bg-white dark:bg-[#1d2125]">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <div className="flex-1 overflow-auto bg-gray-50 dark:bg-[#161a1d]">{children}</div>
       </div>
     </div>
   );

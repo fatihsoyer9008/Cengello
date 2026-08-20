@@ -1,93 +1,78 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, Home, LayoutDashboard, LayoutTemplate, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-}
+import { CreateWorkspaceDialog } from "@/components/workspace/CreateWorkspaceDialog";
+import { getWorkspaceColor } from "@/lib/board-theme";
+import { workspacesApi } from "@/lib/api/workspaces";
 
-function BoardsIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <path d="M9 3v18M15 3v18" />
-    </svg>
-  );
-}
-function MembersIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="9" cy="8" r="3" />
-      <path d="M2 20c0-3.3 3-6 7-6s7 2.7 7 6" />
-      <circle cx="17" cy="8" r="2.5" />
-      <path d="M17 14c2.8.3 5 2.7 5 6" />
-    </svg>
-  );
-}
-function SettingsIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
-    </svg>
-  );
-}
-function ActivityIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-    </svg>
-  );
+function navItemClass(active: boolean): string {
+  return `flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium transition-colors ${
+    active
+      ? "bg-blue-50 text-brand dark:bg-blue-500/15 dark:text-blue-400"
+      : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+  }`;
 }
 
-export function Sidebar({ workspaceId, boardId }: { workspaceId?: string; boardId?: string }) {
+export function Sidebar() {
   const pathname = usePathname();
+  const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
+  const { data: workspaces } = useQuery({ queryKey: ["workspaces"], queryFn: workspacesApi.list });
 
-  const items: NavItem[] = [
-    { label: "Boards", href: "/workspaces", icon: <BoardsIcon /> },
-    {
-      label: "Members",
-      href: workspaceId ? `/workspaces/${workspaceId}/members` : "/workspaces",
-      icon: <MembersIcon />,
-    },
-    {
-      label: "Settings",
-      href: boardId ? `/boards/${boardId}/settings/labels` : "/workspaces",
-      icon: <SettingsIcon />,
-    },
-    {
-      label: "Activity",
-      href: boardId ? `/boards/${boardId}/settings/labels` : "/workspaces",
-      icon: <ActivityIcon />,
-    },
-  ];
+  const boardsActive = pathname.startsWith("/workspaces") || pathname.startsWith("/boards");
 
   return (
-    <aside className="flex h-screen w-44 shrink-0 flex-col bg-sidebar text-gray-300">
-      <div className="flex items-center gap-2 px-4 py-4">
-        <span className="flex h-7 w-7 items-center justify-center rounded bg-brand text-sm font-bold text-white">C</span>
-        <span className="text-sm font-bold text-white">Cengello</span>
-      </div>
-      <nav className="mt-2 flex-1 space-y-0.5 px-2">
-        {items.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors ${
-                active ? "bg-sidebar-hover text-white" : "text-gray-400 hover:bg-sidebar-hover hover:text-white"
-              }`}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          );
-        })}
+    <aside className="flex h-full w-60 shrink-0 flex-col overflow-y-auto border-r border-gray-200 bg-white px-2 py-3 dark:border-white/10 dark:bg-[#1d2125]">
+      <nav className="space-y-0.5">
+        <Link href="/workspaces" className={navItemClass(boardsActive)}>
+          <LayoutDashboard className="h-[18px] w-[18px]" />
+          Panolar
+        </Link>
+        <button type="button" className={navItemClass(false)}>
+          <LayoutTemplate className="h-[18px] w-[18px]" />
+          Şablonlar
+        </button>
+        <Link href="/workspaces" className={navItemClass(false)}>
+          <Home className="h-[18px] w-[18px]" />
+          Anasayfa
+        </Link>
       </nav>
+
+      <div className="mt-5 flex items-center justify-between px-2.5">
+        <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">Çalışma Alanları</span>
+        <button
+          type="button"
+          onClick={() => setCreateWorkspaceOpen(true)}
+          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-white/10 dark:hover:text-gray-300"
+          aria-label="Çalışma alanı oluştur"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <div className="mt-1 space-y-0.5">
+        {workspaces?.map((ws) => (
+          <Link
+            key={ws.id}
+            href={`/workspaces/${ws.id}/boards`}
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+          >
+            <span
+              className={`flex h-6 w-6 shrink-0 items-center justify-center rounded text-xs font-bold text-white ${getWorkspaceColor(ws.id)}`}
+            >
+              {ws.name[0]?.toUpperCase()}
+            </span>
+            <span className="truncate">{ws.name}</span>
+            <ChevronDown className="ml-auto h-3.5 w-3.5 shrink-0 text-gray-400" />
+          </Link>
+        ))}
+      </div>
+
+      <CreateWorkspaceDialog open={createWorkspaceOpen} onOpenChange={setCreateWorkspaceOpen} />
     </aside>
   );
 }
