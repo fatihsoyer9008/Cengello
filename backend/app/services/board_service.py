@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import _WORKSPACE_ROLE_RANK, assert_workspace_role
-from app.core.exceptions import BadRequestError, ConflictError, NotFoundError
+from app.core.exceptions import BadRequestError, ConflictError, ForbiddenError, NotFoundError
 from app.models.board import Board, BoardMember
 from app.models.board_invite import BoardInviteLink
 from app.models.enums import BoardRole, WorkspaceRole
@@ -83,6 +83,9 @@ def update_member_role(db: Session, board_id: uuid.UUID, member_id: uuid.UUID, d
     member = db.get(BoardMember, member_id)
     if member is None or member.board_id != board_id:
         raise NotFoundError("Board member not found")
+    board = db.get(Board, board_id)
+    if board is not None and member.user_id == board.created_by:
+        raise ForbiddenError("Cannot change the role of the board owner")
     if member.role == BoardRole.admin and data.role != BoardRole.admin and _count_admins(db, board_id) <= 1:
         raise BadRequestError("Cannot demote the last remaining board admin")
     member.role = data.role
@@ -105,6 +108,9 @@ def remove_member(db: Session, board_id: uuid.UUID, member_id: uuid.UUID) -> Non
     member = db.get(BoardMember, member_id)
     if member is None or member.board_id != board_id:
         raise NotFoundError("Board member not found")
+    board = db.get(Board, board_id)
+    if board is not None and member.user_id == board.created_by:
+        raise ForbiddenError("Cannot remove the board owner")
     if member.role == BoardRole.admin and _count_admins(db, board_id) <= 1:
         raise BadRequestError("Cannot remove the last remaining board admin")
     db.delete(member)

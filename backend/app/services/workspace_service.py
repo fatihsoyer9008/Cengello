@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import BadRequestError, ConflictError, NotFoundError
+from app.core.exceptions import BadRequestError, ConflictError, ForbiddenError, NotFoundError
 from app.models.enums import WorkspaceRole
 from app.models.user import User
 from app.models.workspace import Workspace, WorkspaceMember
@@ -76,6 +76,9 @@ def update_member_role(db: Session, workspace_id: uuid.UUID, member_id: uuid.UUI
     member = db.get(WorkspaceMember, member_id)
     if member is None or member.workspace_id != workspace_id:
         raise NotFoundError("Workspace member not found")
+    workspace = db.get(Workspace, workspace_id)
+    if workspace is not None and member.user_id == workspace.created_by:
+        raise ForbiddenError("Cannot change the role of the workspace owner")
     if member.role == WorkspaceRole.owner and data.role != WorkspaceRole.owner and _count_owners(db, workspace_id) <= 1:
         raise BadRequestError("Cannot demote the last remaining workspace owner")
     member.role = data.role
@@ -88,6 +91,9 @@ def remove_member(db: Session, workspace_id: uuid.UUID, member_id: uuid.UUID) ->
     member = db.get(WorkspaceMember, member_id)
     if member is None or member.workspace_id != workspace_id:
         raise NotFoundError("Workspace member not found")
+    workspace = db.get(Workspace, workspace_id)
+    if workspace is not None and member.user_id == workspace.created_by:
+        raise ForbiddenError("Cannot remove the workspace owner")
     if member.role == WorkspaceRole.owner and _count_owners(db, workspace_id) <= 1:
         raise BadRequestError("Cannot remove the last remaining workspace owner")
     db.delete(member)
