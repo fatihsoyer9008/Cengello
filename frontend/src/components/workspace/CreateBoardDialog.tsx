@@ -72,17 +72,20 @@ export function CreateBoardDialog({
           </div>
 
           <div
-            className="mb-4 flex h-24 items-center justify-center gap-1.5 rounded-md p-3"
+            className="relative mb-4 h-24 overflow-hidden rounded-md"
             style={getBoardStyle({ id: "preview", background })}
           >
-            <div className="h-14 w-8 rounded bg-white/30" />
-            <div className="h-14 w-8 rounded bg-white/30" />
-            <div className="h-14 w-8 rounded bg-white/30" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/25 to-black/45" />
+            <div className="relative flex h-full items-center justify-center gap-1.5">
+              <div className="h-14 w-8 rounded bg-white/20 backdrop-blur-sm" />
+              <div className="h-14 w-8 rounded bg-white/20 backdrop-blur-sm" />
+              <div className="h-14 w-8 rounded bg-white/20 backdrop-blur-sm" />
+            </div>
           </div>
 
           <div className="mb-4">
             <p className="mb-1.5 text-xs font-semibold text-gray-300">Arka plan</p>
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-3 gap-2">
               {BOARD_BACKGROUND_OPTIONS.map((opt) => (
                 <button
                   key={opt.id}
@@ -90,15 +93,23 @@ export function CreateBoardDialog({
                   onClick={() => setBackground(opt.value)}
                   aria-label={opt.name}
                   title={opt.name}
-                  className={`relative h-12 overflow-hidden rounded transition ${
-                    background === opt.value ? "ring-2 ring-brand ring-offset-2 ring-offset-[#282e33]" : "hover:opacity-80"
+                  className={`group relative h-14 overflow-hidden rounded-md transition ${
+                    background === opt.value ? "ring-2 ring-brand ring-offset-2 ring-offset-[#282e33]" : ""
                   }`}
-                  style={
-                    opt.type === "image"
-                      ? { backgroundImage: `url(${opt.value})`, backgroundSize: "cover", backgroundPosition: "center" }
-                      : { backgroundImage: opt.value }
-                  }
                 >
+                  {opt.type === "image" ? (
+                    <img
+                      src={opt.thumb}
+                      alt={opt.name}
+                      draggable={false}
+                      className="h-full w-full object-cover transition duration-200 ease-out group-hover:scale-105 group-hover:brightness-110"
+                    />
+                  ) : (
+                    <div
+                      className="h-full w-full transition duration-200 ease-out group-hover:scale-105 group-hover:brightness-110"
+                      style={{ backgroundImage: opt.thumb }}
+                    />
+                  )}
                   {background === opt.value && (
                     <span className="absolute inset-0 flex items-center justify-center bg-black/25">
                       <Check className="h-4 w-4 text-white drop-shadow" />
