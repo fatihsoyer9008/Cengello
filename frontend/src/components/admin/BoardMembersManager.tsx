@@ -10,7 +10,7 @@ import { ApiError } from "@/lib/api/client";
 import { usersApi } from "@/lib/api/users";
 import type { BoardRole } from "@/types/board";
 
-export function BoardMembersManager({ boardId }: { boardId: string }) {
+export function BoardMembersManager({ boardId, ownerId }: { boardId: string; ownerId: string }) {
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -66,20 +66,26 @@ export function BoardMembersManager({ boardId }: { boardId: string }) {
         {members?.map((member) => (
           <li key={member.id} className="flex items-center justify-between px-3 py-2">
             <span className="text-sm text-gray-800 dark:text-gray-200">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
-            <div className="flex items-center gap-2">
-              <select
-                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                value={member.role}
-                onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as BoardRole })}
-              >
-                <option value="viewer">Viewer</option>
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
-              </select>
-              <Button variant="danger" onClick={() => removeMember.mutate(member.id)}>
-                Remove
-              </Button>
-            </div>
+            {member.user_id === ownerId ? (
+              <span className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-500 dark:border-gray-600 dark:text-gray-400">
+                Owner
+              </span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <select
+                  className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                  value={member.role}
+                  onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as BoardRole })}
+                >
+                  <option value="viewer">Viewer</option>
+                  <option value="member">Member</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <Button variant="danger" onClick={() => removeMember.mutate(member.id)}>
+                  Remove
+                </Button>
+              </div>
+            )}
           </li>
         ))}
       </ul>

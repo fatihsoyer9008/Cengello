@@ -18,6 +18,11 @@ export default function WorkspaceMembersPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const { data: workspace } = useQuery({
+    queryKey: ["workspaces", workspaceId],
+    queryFn: () => workspacesApi.get(workspaceId),
+  });
+
   const { data: members } = useQuery({
     queryKey: ["workspaces", workspaceId, "members"],
     queryFn: () => workspacesApi.members(workspaceId),
@@ -79,20 +84,26 @@ export default function WorkspaceMembersPage() {
         {members?.map((member) => (
           <li key={member.id} className="flex items-center justify-between px-4 py-3">
             <span className="text-sm text-gray-800 dark:text-gray-200">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
-            <div className="flex items-center gap-2">
-              <select
-                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                value={member.role}
-                onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as WorkspaceRole })}
-              >
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
-                <option value="owner">Owner</option>
-              </select>
-              <Button variant="danger" onClick={() => removeMember.mutate(member.id)}>
-                Remove
-              </Button>
-            </div>
+            {member.user_id === workspace?.created_by ? (
+              <span className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-500 dark:border-gray-600 dark:text-gray-400">
+                Owner
+              </span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <select
+                  className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                  value={member.role}
+                  onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as WorkspaceRole })}
+                >
+                  <option value="member">Member</option>
+                  <option value="admin">Admin</option>
+                  <option value="owner">Owner</option>
+                </select>
+                <Button variant="danger" onClick={() => removeMember.mutate(member.id)}>
+                  Remove
+                </Button>
+              </div>
+            )}
           </li>
         ))}
       </ul>

@@ -173,7 +173,7 @@ export function BoardTopBar({ board }: { board: Board }) {
 
       <Dialog open={shareOpen} onOpenChange={setShareOpen} title="Panoyu paylaş" widthClassName="max-w-lg">
         <ShareLinkSection boardId={board.id} open={shareOpen} />
-        <BoardMembersManager boardId={board.id} />
+        <BoardMembersManager boardId={board.id} ownerId={board.created_by} />
       </Dialog>
     </header>
   );
