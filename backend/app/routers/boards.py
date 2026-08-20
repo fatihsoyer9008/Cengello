@@ -11,6 +11,8 @@ from app.models.user import User
 from app.schemas.automation import AutomationRuleRead
 from app.schemas.board import (
     BoardCreate,
+    BoardInviteLinkRead,
+    BoardJoinResult,
     BoardMemberCreate,
     BoardMemberRead,
     BoardMemberUpdate,
@@ -83,6 +85,20 @@ def update_member(member_id: uuid.UUID, data: BoardMemberUpdate, board: Board = 
 @router.delete("/boards/{board_id}/members/{member_id}", status_code=204)
 def remove_member(member_id: uuid.UUID, board: Board = Depends(get_board_and_check_role(BoardRole.admin)), db: Session = Depends(get_db)):
     board_service.remove_member(db, board.id, member_id)
+
+
+@router.post("/boards/{board_id}/share", response_model=BoardInviteLinkRead)
+def share_board(
+    current_user: User = Depends(get_current_user),
+    board: Board = Depends(get_board_and_check_role(BoardRole.admin)),
+    db: Session = Depends(get_db),
+):
+    return board_service.get_or_create_invite_link(db, board.id, current_user)
+
+
+@router.post("/boards/join/{token}", response_model=BoardJoinResult)
+def join_board(token: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return board_service.join_via_token(db, current_user, token)
 
 
 @router.get("/boards/{board_id}/lists", response_model=list[ListRead])

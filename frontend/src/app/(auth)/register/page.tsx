@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/Button";
@@ -13,6 +13,7 @@ import { setAccessToken } from "@/lib/auth/token-store";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,7 +30,8 @@ export default function RegisterPage() {
       setAccessToken(access_token);
       const user = await authApi.me();
       login(user);
-      router.replace("/workspaces");
+      const next = searchParams.get("next");
+      router.replace(next && next.startsWith("/") && !next.startsWith("//") ? next : "/workspaces");
     } catch (err) {
       setError(err instanceof ApiError ? String(err.detail) : "Registration failed");
     } finally {
@@ -65,7 +67,10 @@ export default function RegisterPage() {
       </Button>
       <p className="text-center text-sm text-gray-600 dark:text-gray-400">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 hover:underline dark:text-blue-400">
+        <Link
+          href={searchParams.get("next") ? `/login?next=${encodeURIComponent(searchParams.get("next")!)}` : "/login"}
+          className="text-blue-600 hover:underline dark:text-blue-400"
+        >
           Sign in
         </Link>
       </p>

@@ -1,7 +1,16 @@
 import { apiFetch } from "@/lib/api/client";
 import type { ActivityLogEntry } from "@/types/activity";
 import type { AutomationRule } from "@/types/automation";
-import type { Board, BoardCreate, BoardMember, BoardMemberCreate, BoardMemberUpdate, BoardUpdate } from "@/types/board";
+import type {
+  Board,
+  BoardCreate,
+  BoardInviteLink,
+  BoardJoinResult,
+  BoardMember,
+  BoardMemberCreate,
+  BoardMemberUpdate,
+  BoardUpdate,
+} from "@/types/board";
 import type { Card, CardListFilters, CardSummary } from "@/types/card";
 import type { CustomField } from "@/types/customField";
 import type { Label } from "@/types/label";
@@ -40,4 +49,6 @@ export const boardsApi = {
   removeMember: (id: string, memberId: string) => apiFetch<void>(`/boards/${id}/members/${memberId}`, { method: "DELETE" }),
   captureTemplate: (id: string, data: TemplateCaptureBoardRequest) =>
     apiFetch<Template>(`/boards/${id}/templates`, { method: "POST", body: JSON.stringify(data) }),
+  share: (id: string) => apiFetch<BoardInviteLink>(`/boards/${id}/share`, { method: "POST" }),
+  join: (token: string) => apiFetch<BoardJoinResult>(`/boards/join/${token}`, { method: "POST" }),
 };

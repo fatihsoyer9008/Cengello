@@ -57,3 +57,17 @@ class BoardMemberUpdate(BaseModel):
 
 class BoardStarUpdate(BaseModel):
     is_starred: bool
+
+
+class BoardInviteLinkRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    board_id: uuid.UUID
+    token: str
+    created_at: datetime
+
+
+class BoardJoinResult(BaseModel):
+    board_id: uuid.UUID
+    already_member: bool

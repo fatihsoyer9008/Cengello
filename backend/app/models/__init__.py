@@ -3,6 +3,7 @@ from app.models.attachment import Attachment
 from app.models.auth import RefreshToken
 from app.models.automation import AutomationAction, AutomationRule
 from app.models.board import Board, BoardMember
+from app.models.board_invite import BoardInviteLink
 from app.models.card import Card, CardMember
 from app.models.checklist import Checklist, ChecklistItem
 from app.models.comment import Comment
@@ -21,6 +22,7 @@ __all__ = [
     "AutomationAction",
     "AutomationRule",
     "Board",
+    "BoardInviteLink",
     "BoardMember",
     "Card",
     "CardMember",

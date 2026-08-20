@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 
 import { AppShell } from "@/components/layout/AppShell";
@@ -9,10 +9,11 @@ import { useAuth } from "@/lib/auth/auth-context";
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { status } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (status === "unauthenticated") router.replace("/login");
-  }, [status, router]);
+    if (status === "unauthenticated") router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+  }, [status, router, pathname]);
 
   if (status !== "authenticated") {
     return (

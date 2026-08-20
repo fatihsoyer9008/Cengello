@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SquareCheckBig } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -23,6 +23,7 @@ export function CardChecklists({ cardId }: { cardId: string }) {
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [newItemText, setNewItemText] = useState("");
   const [hideCompleted, setHideCompleted] = useState<Record<string, boolean>>({});
+  const itemInputRef = useRef<HTMLInputElement>(null);
 
   const deleteChecklist = useMutation({
     mutationFn: (id: string) => checklistsApi.remove(id),
@@ -34,7 +35,23 @@ export function CardChecklists({ cardId }: { cardId: string }) {
     onSuccess: () => {
       invalidate(queryClient, cardId);
       setNewItemText("");
-      setAddingTo(null);
+      // Stay in "adding" mode so the user can keep typing the next item without re-clicking.
+      itemInputRef.current?.focus();
+    },
+  });
+
+  // Pasting multi-line text (e.g. a copied to-do list) creates one item per non-empty line
+  // instead of dumping the whole blob into a single item.
+  const bulkCreateItems = useMutation({
+    mutationFn: async ({ checklistId, lines }: { checklistId: string; lines: string[] }) => {
+      for (const line of lines) {
+        await checklistsApi.createItem({ text: line, checklist_id: checklistId });
+      }
+    },
+    onSuccess: () => {
+      invalidate(queryClient, cardId);
+      setNewItemText("");
+      itemInputRef.current?.focus();
     },
   });
 
@@ -130,10 +147,28 @@ export function CardChecklists({ cardId }: { cardId: string }) {
                 className="mt-1.5 flex gap-2 pl-1"
               >
                 <Input
+                  ref={itemInputRef}
                   autoFocus
                   value={newItemText}
                   onChange={(e) => setNewItemText(e.target.value)}
-                  placeholder="Öğe metni"
+                  placeholder="Öğe metni (birden çok satır yapıştırabilirsin)"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (newItemText.trim()) createItem.mutate(checklist.id);
+                    }
+                    if (e.key === "Escape") setAddingTo(null);
+                  }}
+                  onPaste={(e) => {
+                    const text = e.clipboardData.getData("text");
+                    if (!text.includes("\n")) return;
+                    e.preventDefault();
+                    const lines = text
+                      .split("\n")
+                      .map((line) => line.trim())
+                      .filter(Boolean);
+                    if (lines.length > 0) bulkCreateItems.mutate({ checklistId: checklist.id, lines });
+                  }}
                 />
                 <Button type="submit">Ekle</Button>
                 <Button type="button" variant="ghost" onClick={() => setAddingTo(null)}>

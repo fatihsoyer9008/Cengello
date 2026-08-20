@@ -36,7 +36,8 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 - 📌 **Kanban Board View** — colored, draggable lists and cards with live drag-and-drop reordering (powered by `dnd-kit`).
 - 🎨 **Custom Board Backgrounds** — pick a high-res photo background or a gradient when creating a board, with a live preview.
 - 🌓 **Dark Mode UI** — a polished dark theme across the whole app, toggleable at any time.
-- ✅ **Checklists & Progress Tracking** — nested checklist items with live completion percentage bars.
+- ✅ **Checklists & Progress Tracking** — nested checklist items with live completion percentage bars, multi-line paste (one item per line), and rapid-fire "Enter to add another" input for both cards and checklist items.
+- 🔗 **Invite via Link** — generate a shareable board link from the "Paylaş" menu; anyone who opens it (after signing in) joins the board automatically.
 - 🏷️ **Labels, Members & Due Dates** — tag cards, assign teammates, and track deadlines with visual due-state indicators.
 - 📎 **Attachments & Cover Images** — upload files to a card and promote one to its cover image.
 - 💬 **Unified Comments & Activity Feed** — Markdown comments interleaved with a full, human-readable audit log per card.
@@ -164,6 +165,10 @@ docker compose run --rm backend alembic upgrade head
 ```
 
 `docker-compose.prod.yml` builds production images (no source bind-mounts), sets `restart: unless-stopped`, and adds a **Caddy** reverse proxy in front of the frontend/backend with automatic HTTPS via your `DOMAIN`.
+
+### 👥 Sharing one database across a team
+
+Want a teammate developing against the same data instead of everyone getting their own local Postgres? See [`docs/remote-database-setup.md`](docs/remote-database-setup.md) for tunneling into a shared Postgres instance on your VPS over SSH (without exposing `5432` to the internet).
 
 ---
 

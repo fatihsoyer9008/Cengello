@@ -1,3 +1,4 @@
+import secrets
 import uuid
 
 from sqlalchemy.orm import Session
@@ -5,10 +6,11 @@ from sqlalchemy.orm import Session
 from app.core.dependencies import _WORKSPACE_ROLE_RANK, assert_workspace_role
 from app.core.exceptions import BadRequestError, ConflictError, NotFoundError
 from app.models.board import Board, BoardMember
+from app.models.board_invite import BoardInviteLink
 from app.models.enums import BoardRole, WorkspaceRole
 from app.models.user import User
 from app.models.workspace import WorkspaceMember
-from app.schemas.board import BoardCreate, BoardMemberCreate, BoardMemberUpdate, BoardUpdate
+from app.schemas.board import BoardCreate, BoardJoinResult, BoardMemberCreate, BoardMemberUpdate, BoardUpdate
 from app.services.user_service import get_user_by_email
 
 
@@ -107,3 +109,32 @@ def remove_member(db: Session, board_id: uuid.UUID, member_id: uuid.UUID) -> Non
         raise BadRequestError("Cannot remove the last remaining board admin")
     db.delete(member)
     db.commit()
+
+
+def get_or_create_invite_link(db: Session, board_id: uuid.UUID, actor: User) -> BoardInviteLink:
+    existing = (
+        db.query(BoardInviteLink)
+        .filter(BoardInviteLink.board_id == board_id, BoardInviteLink.is_active.is_(True))
+        .one_or_none()
+    )
+    if existing is not None:
+        return existing
+    link = BoardInviteLink(board_id=board_id, token=secrets.token_urlsafe(24), created_by=actor.id)
+    db.add(link)
+    db.commit()
+    db.refresh(link)
+    return link
+
+
+def join_via_token(db: Session, actor: User, token: str) -> BoardJoinResult:
+    link = db.query(BoardInviteLink).filter_by(token=token, is_active=True).one_or_none()
+    if link is None:
+        raise NotFoundError("Invite link is invalid or has been revoked")
+
+    existing = db.query(BoardMember).filter_by(board_id=link.board_id, user_id=actor.id).one_or_none()
+    if existing is not None:
+        return BoardJoinResult(board_id=link.board_id, already_member=True)
+
+    db.add(BoardMember(board_id=link.board_id, user_id=actor.id, role=BoardRole.member))
+    db.commit()
+    return BoardJoinResult(board_id=link.board_id, already_member=False)
