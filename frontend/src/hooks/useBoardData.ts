@@ -9,12 +9,14 @@ export function useBoardData(boardId: string) {
     queryKey: ["boards", boardId, "lists"],
     queryFn: () => boardsApi.lists(boardId),
     enabled: !!boardId,
+    refetchInterval: 4000,
   });
 
   const cardsQuery = useQuery({
     queryKey: ["boards", boardId, "cards"],
     queryFn: () => boardsApi.cardsSummary(boardId, { is_archived: false }),
     enabled: !!boardId,
+    refetchInterval: 4000,
   });
 
   const cardsByList = useMemo(() => {
