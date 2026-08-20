@@ -1,19 +1,16 @@
 services:
   db:
     restart: unless-stopped
-    ports: []
 
   backend:
     restart: unless-stopped
     volumes:
       - uploads_data:/app/uploads
-    ports: []
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   frontend:
     restart: unless-stopped
     volumes: []
-    ports: []
     build:
       context: ./frontend
       target: runner
