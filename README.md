@@ -1,5 +1,7 @@
 <div align="center">
 
+🇬🇧 **English** · 🇹🇷 [Türkçe](README.tr.md)
+
 # 🗂️ Cengello
 
 **A full-stack, self-hosted Trello clone** — Kanban boards, drag-and-drop cards, checklists, activity feeds, and a personal Inbox, built with Next.js and FastAPI.
