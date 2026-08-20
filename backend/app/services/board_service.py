@@ -141,6 +141,14 @@ def join_via_token(db: Session, actor: User, token: str) -> BoardJoinResult:
     if existing is not None:
         return BoardJoinResult(board_id=link.board_id, already_member=True)
 
+    board = db.get(Board, link.board_id)
+    if board is not None:
+        workspace_membership = (
+            db.query(WorkspaceMember).filter_by(workspace_id=board.workspace_id, user_id=actor.id).one_or_none()
+        )
+        if workspace_membership is None:
+            db.add(WorkspaceMember(workspace_id=board.workspace_id, user_id=actor.id, role=WorkspaceRole.member))
+
     db.add(BoardMember(board_id=link.board_id, user_id=actor.id, role=BoardRole.member))
     db.commit()
     return BoardJoinResult(board_id=link.board_id, already_member=False)
