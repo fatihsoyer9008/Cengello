@@ -17,7 +17,11 @@ from app.schemas.auth import TokenResponse
 from app.services.user_service import get_user_by_email
 
 REFRESH_COOKIE_NAME = "refresh_token"
-REFRESH_COOKIE_PATH = "/auth"
+# Must be "/" rather than "/auth": in production the browser only ever sees
+# requests under the reverse proxy's "/api" prefix (Caddy strips it before
+# forwarding to the backend), so a narrower path here would never match and
+# the cookie would never be sent back.
+REFRESH_COOKIE_PATH = "/"
 
 
 def authenticate(db: Session, email: str, password: str) -> User:
