@@ -44,8 +44,29 @@ function hash(input: string): number {
   return Math.abs(h);
 }
 
+export interface BoardBackgroundOption {
+  id: string;
+  name: string;
+  type: "image" | "gradient";
+  value: string;
+}
+
+export const BOARD_BACKGROUND_OPTIONS: BoardBackgroundOption[] = [
+  { id: "forest", name: "Orman", type: "image", value: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=400&q=80" },
+  { id: "dark-forest", name: "Koyu orman", type: "image", value: "https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80" },
+  { id: "mountain", name: "Dağ manzarası", type: "image", value: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=400&q=80" },
+  { id: "sunset", name: "Gün batımı", type: "image", value: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80" },
+  { id: "blue-gradient", name: "Mavi gradyan", type: "gradient", value: "linear-gradient(135deg, #0C66E4 0%, #1E3A6E 100%)" },
+  { id: "purple-gradient", name: "Mor gradyan", type: "gradient", value: "linear-gradient(135deg, #6E5DC6 0%, #2E1065 100%)" },
+];
+
 export function getBoardStyle(board: { id: string; background?: string | null }): CSSProperties {
-  if (board.background) return { backgroundColor: board.background };
+  const bg = board.background;
+  if (bg) {
+    if (bg.startsWith("http")) return { backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" };
+    if (bg.startsWith("linear-gradient") || bg.startsWith("radial-gradient")) return { backgroundImage: bg, backgroundSize: "cover" };
+    return { backgroundColor: bg };
+  }
   return { backgroundImage: BOARD_GRADIENTS[hash(board.id) % BOARD_GRADIENTS.length] };
 }
 

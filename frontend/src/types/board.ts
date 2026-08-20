@@ -1,10 +1,12 @@
 export type BoardRole = "admin" | "member" | "viewer";
+export type BoardVisibility = "private" | "workspace" | "public";
 
 export interface Board {
   id: string;
   name: string;
   description: string | null;
   background: string | null;
+  visibility: BoardVisibility;
   workspace_id: string;
   is_archived: boolean;
   is_template: boolean;
@@ -16,6 +18,7 @@ export interface BoardCreate {
   name: string;
   description?: string | null;
   background?: string | null;
+  visibility?: BoardVisibility;
   workspace_id: string;
 }
 
@@ -23,6 +26,7 @@ export interface BoardUpdate {
   name?: string;
   description?: string | null;
   background?: string | null;
+  visibility?: BoardVisibility;
   is_archived?: boolean;
 }
 

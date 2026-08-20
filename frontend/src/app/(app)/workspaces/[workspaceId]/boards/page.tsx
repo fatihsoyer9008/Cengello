@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { CreateBoardDialog } from "@/components/workspace/CreateBoardDialog";
 import { Button } from "@/components/ui/Button";
+import { getBoardStyle } from "@/lib/board-theme";
 import { workspacesApi } from "@/lib/api/workspaces";
 
 export default function BoardsPage() {
@@ -48,7 +49,7 @@ export default function BoardsPage() {
             key={board.id}
             href={`/boards/${board.id}`}
             className="flex h-24 items-end rounded-lg p-4 text-white shadow-sm transition hover:shadow-md"
-            style={{ backgroundColor: board.background || "#4b5563" }}
+            style={getBoardStyle(board)}
           >
             <span className="font-medium drop-shadow">{board.name}</span>
           </Link>

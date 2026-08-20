@@ -13,6 +13,12 @@ class BoardRole(str, enum.Enum):
     viewer = "viewer"
 
 
+class BoardVisibility(str, enum.Enum):
+    private = "private"
+    workspace = "workspace"
+    public = "public"
+
+
 class CustomFieldType(str, enum.Enum):
     text = "text"
     number = "number"

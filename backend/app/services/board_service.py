@@ -19,6 +19,7 @@ def create_board(db: Session, actor: User, data: BoardCreate) -> Board:
         name=data.name,
         description=data.description,
         background=data.background,
+        visibility=data.visibility,
         created_by=actor.id,
     )
     db.add(board)
