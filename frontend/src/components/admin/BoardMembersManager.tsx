@@ -19,7 +19,7 @@ export function BoardMembersManager({ boardId }: { boardId: string }) {
 
   const userIds = members?.map((m) => m.user_id) ?? [];
   const { data: userDetails } = useQuery({
-    queryKey: ["boards", boardId, "member-users", userIds],
+    queryKey: ["boards", boardId, "member-users-map", userIds],
     queryFn: async () => Object.fromEntries((await Promise.all(userIds.map((id) => usersApi.get(id)))).map((u) => [u.id, u])),
     enabled: userIds.length > 0,
   });

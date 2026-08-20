@@ -1,6 +1,7 @@
 export interface BoardList {
   id: string;
   name: string;
+  color: string | null;
   board_id: string;
   position: number;
   is_archived: boolean;
@@ -8,11 +9,13 @@ export interface BoardList {
 
 export interface ListCreate {
   name: string;
+  color?: string | null;
   board_id: string;
 }
 
 export interface ListUpdate {
   name?: string;
+  color?: string | null;
   is_archived?: boolean;
 }
 

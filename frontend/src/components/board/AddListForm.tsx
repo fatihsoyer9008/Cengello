@@ -25,9 +25,9 @@ export function AddListForm({ boardId }: { boardId: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="h-fit w-72 shrink-0 rounded-xl bg-white/50 px-3 py-2.5 text-left text-sm font-medium text-gray-600 hover:bg-white dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="h-fit w-72 shrink-0 rounded-xl bg-white/50 px-3 py-2.5 text-left text-sm font-medium text-gray-600 hover:bg-white dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20"
       >
-        + Add another list
+        + Yeni liste ekle
       </button>
     );
   }
@@ -38,15 +38,15 @@ export function AddListForm({ boardId }: { boardId: string }) {
         e.preventDefault();
         if (name.trim()) createList.mutate();
       }}
-      className="h-fit w-72 shrink-0 space-y-1.5 rounded-xl bg-[#F4F5F7] p-2.5 shadow-sm dark:bg-gray-800"
+      className="h-fit w-72 shrink-0 space-y-1.5 rounded-xl bg-[#F4F5F7] p-2.5 shadow-sm dark:bg-black/25"
     >
-      <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="List name" />
+      <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="Liste adı" />
       <div className="flex gap-2">
         <Button type="submit" disabled={createList.isPending || !name.trim()}>
-          Add list
+          Listeyi ekle
         </Button>
         <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-          Cancel
+          İptal
         </Button>
       </div>
     </form>

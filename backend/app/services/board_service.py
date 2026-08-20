@@ -19,6 +19,7 @@ def create_board(db: Session, actor: User, data: BoardCreate) -> Board:
         name=data.name,
         description=data.description,
         background=data.background,
+        visibility=data.visibility,
         created_by=actor.id,
     )
     db.add(board)
@@ -83,6 +84,16 @@ def update_member_role(db: Session, board_id: uuid.UUID, member_id: uuid.UUID, d
     if member.role == BoardRole.admin and data.role != BoardRole.admin and _count_admins(db, board_id) <= 1:
         raise BadRequestError("Cannot demote the last remaining board admin")
     member.role = data.role
+    db.commit()
+    db.refresh(member)
+    return member
+
+
+def set_starred(db: Session, board_id: uuid.UUID, user_id: uuid.UUID, is_starred: bool) -> BoardMember:
+    member = db.query(BoardMember).filter_by(board_id=board_id, user_id=user_id).one_or_none()
+    if member is None:
+        raise NotFoundError("Board member not found")
+    member.is_starred = is_starred
     db.commit()
     db.refresh(member)
     return member

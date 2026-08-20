@@ -15,6 +15,7 @@ from app.schemas.board import (
     BoardMemberRead,
     BoardMemberUpdate,
     BoardRead,
+    BoardStarUpdate,
     BoardUpdate,
 )
 from app.schemas.card import CardListFilters, CardRead, CardSummary
@@ -52,6 +53,16 @@ def update_board(data: BoardUpdate, board: Board = Depends(get_board_and_check_r
 @router.delete("/boards/{board_id}", status_code=204)
 def delete_board(board: Board = Depends(get_board_and_check_role(BoardRole.admin)), db: Session = Depends(get_db)):
     board_service.delete_board(db, board)
+
+
+@router.patch("/boards/{board_id}/star", response_model=BoardMemberRead)
+def set_starred(
+    data: BoardStarUpdate,
+    current_user: User = Depends(get_current_user),
+    board: Board = Depends(get_board_and_check_role(BoardRole.viewer)),
+    db: Session = Depends(get_db),
+):
+    return board_service.set_starred(db, board.id, current_user.id, data.is_starred)
 
 
 @router.get("/boards/{board_id}/members", response_model=list[BoardMemberRead])

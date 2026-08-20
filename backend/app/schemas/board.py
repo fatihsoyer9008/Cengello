@@ -3,13 +3,14 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr
 
-from app.models.enums import BoardRole
+from app.models.enums import BoardRole, BoardVisibility
 
 
 class BoardBase(BaseModel):
     name: str
     description: str | None = None
     background: str | None = None
+    visibility: BoardVisibility = BoardVisibility.workspace
 
 
 class BoardCreate(BoardBase):
@@ -20,6 +21,7 @@ class BoardUpdate(BaseModel):
     name: str | None = None
     description: str | None = None
     background: str | None = None
+    visibility: BoardVisibility | None = None
     is_archived: bool | None = None
 
 
@@ -41,6 +43,7 @@ class BoardMemberRead(BaseModel):
     board_id: uuid.UUID
     user_id: uuid.UUID
     role: BoardRole
+    is_starred: bool
 
 
 class BoardMemberCreate(BaseModel):
@@ -50,3 +53,7 @@ class BoardMemberCreate(BaseModel):
 
 class BoardMemberUpdate(BaseModel):
     role: BoardRole
+
+
+class BoardStarUpdate(BaseModel):
+    is_starred: bool

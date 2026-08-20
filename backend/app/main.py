@@ -11,6 +11,7 @@ from app.routers import (
     checklists,
     comments,
     custom_fields,
+    inbox,
     labels,
     lists,
     templates,
@@ -48,3 +49,4 @@ app.include_router(comments.router)
 app.include_router(activity.router)
 app.include_router(automation_rules.router)
 app.include_router(templates.router)
+app.include_router(inbox.router)

@@ -22,7 +22,12 @@ def list_board_lists(db: Session, board_id: uuid.UUID, include_archived: bool = 
 def create_list(db: Session, actor: User, data: ListCreate) -> List:
     assert_board_role(db, actor.id, data.board_id, BoardRole.member)
     existing_positions = [row.position for row in db.query(List.position).filter(List.board_id == data.board_id)]
-    new_list = List(board_id=data.board_id, name=data.name, position=next_append_position(existing_positions))
+    new_list = List(
+        board_id=data.board_id,
+        name=data.name,
+        color=data.color,
+        position=next_append_position(existing_positions),
+    )
     db.add(new_list)
     db.flush()
     activity_service.log_activity(

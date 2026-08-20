@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict
 
 class ListBase(BaseModel):
     name: str
+    color: str | None = None
 
 
 class ListCreate(ListBase):
@@ -13,6 +14,7 @@ class ListCreate(ListBase):
 
 class ListUpdate(BaseModel):
     name: str | None = None
+    color: str | None = None
     is_archived: bool | None = None
 
 

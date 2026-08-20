@@ -7,6 +7,7 @@ from app.models.card import Card, CardMember
 from app.models.checklist import Checklist, ChecklistItem
 from app.models.comment import Comment
 from app.models.custom_field import CustomField, CustomFieldValue
+from app.models.inbox import InboxItem
 from app.models.label import CardLabel, Label
 from app.models.list import List
 from app.models.template import Template
@@ -29,6 +30,7 @@ __all__ = [
     "CustomField",
     "CustomFieldValue",
     "CardLabel",
+    "InboxItem",
     "Label",
     "List",
     "Template",

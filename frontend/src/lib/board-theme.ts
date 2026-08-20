@@ -11,6 +11,30 @@ const BOARD_GRADIENTS = [
 
 const WORKSPACE_COLORS = ["bg-emerald-600", "bg-blue-600", "bg-purple-600", "bg-orange-600", "bg-pink-600", "bg-cyan-600"];
 
+const USER_COLORS = [
+  "bg-amber-500",
+  "bg-purple-500",
+  "bg-teal-500",
+  "bg-orange-500",
+  "bg-pink-500",
+  "bg-blue-500",
+  "bg-emerald-500",
+  "bg-rose-500",
+];
+
+export const LIST_COLOR_PALETTE: { name: string; value: string }[] = [
+  { name: "Yeşil", value: "#1F845A" },
+  { name: "Altın", value: "#946F00" },
+  { name: "Turuncu", value: "#C25100" },
+  { name: "Kırmızı", value: "#AE2E24" },
+  { name: "Mor", value: "#6E5DC6" },
+  { name: "Mavi", value: "#0C66E4" },
+  { name: "Gök Mavisi", value: "#227D9B" },
+  { name: "Zeytin Yeşili", value: "#4C6B1F" },
+  { name: "Pembe", value: "#943D73" },
+  { name: "Gri", value: "#626F86" },
+];
+
 function hash(input: string): number {
   let h = 0;
   for (let i = 0; i < input.length; i++) {
@@ -20,11 +44,40 @@ function hash(input: string): number {
   return Math.abs(h);
 }
 
+export interface BoardBackgroundOption {
+  id: string;
+  name: string;
+  type: "image" | "gradient";
+  value: string;
+}
+
+export const BOARD_BACKGROUND_OPTIONS: BoardBackgroundOption[] = [
+  { id: "forest", name: "Orman", type: "image", value: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=400&q=80" },
+  { id: "dark-forest", name: "Koyu orman", type: "image", value: "https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80" },
+  { id: "mountain", name: "Dağ manzarası", type: "image", value: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=400&q=80" },
+  { id: "sunset", name: "Gün batımı", type: "image", value: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80" },
+  { id: "blue-gradient", name: "Mavi gradyan", type: "gradient", value: "linear-gradient(135deg, #0C66E4 0%, #1E3A6E 100%)" },
+  { id: "purple-gradient", name: "Mor gradyan", type: "gradient", value: "linear-gradient(135deg, #6E5DC6 0%, #2E1065 100%)" },
+];
+
 export function getBoardStyle(board: { id: string; background?: string | null }): CSSProperties {
-  if (board.background) return { backgroundColor: board.background };
+  const bg = board.background;
+  if (bg) {
+    if (bg.startsWith("http")) return { backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" };
+    if (bg.startsWith("linear-gradient") || bg.startsWith("radial-gradient")) return { backgroundImage: bg, backgroundSize: "cover" };
+    return { backgroundColor: bg };
+  }
   return { backgroundImage: BOARD_GRADIENTS[hash(board.id) % BOARD_GRADIENTS.length] };
 }
 
 export function getWorkspaceColor(workspaceId: string): string {
   return WORKSPACE_COLORS[hash(workspaceId) % WORKSPACE_COLORS.length];
+}
+
+export function getUserColor(userId: string): string {
+  return USER_COLORS[hash(userId) % USER_COLORS.length];
+}
+
+export function getListColor(list: { id: string; color?: string | null }): string {
+  return list.color || LIST_COLOR_PALETTE[hash(list.id) % LIST_COLOR_PALETTE.length].value;
 }
