@@ -9,6 +9,7 @@ import { CardDetailModal } from "@/components/card-modal/CardDetailModal";
 import { AppShell } from "@/components/layout/AppShell";
 import { boardsApi } from "@/lib/api/boards";
 import { useAuth } from "@/lib/auth/auth-context";
+import { pushRecentBoard } from "@/lib/recent-boards";
 
 export default function BoardPage() {
   const { boardId } = useParams<{ boardId: string }>();
@@ -20,6 +21,10 @@ export default function BoardPage() {
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
+
+  useEffect(() => {
+    if (boardId) pushRecentBoard(boardId);
+  }, [boardId]);
 
   const { data: board } = useQuery({
     queryKey: ["boards", boardId],
@@ -38,9 +43,12 @@ export default function BoardPage() {
   }
 
   return (
-    <AppShell boardId={boardId} workspaceId={board?.workspace_id} title={board?.name}>
-      <div className="h-full pt-4">
-        <BoardView boardId={boardId} />
+    <AppShell>
+      <div className="flex h-full flex-col pt-4">
+        <h1 className="shrink-0 px-4 pb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">{board?.name}</h1>
+        <div className="min-h-0 flex-1">
+          <BoardView boardId={boardId} />
+        </div>
       </div>
 
       {cardId && <CardDetailModal boardId={boardId} cardId={cardId} onClose={() => router.push(pathname)} />}
