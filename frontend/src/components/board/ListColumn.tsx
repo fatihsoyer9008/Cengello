@@ -10,6 +10,7 @@ import { AddCardForm } from "@/components/board/AddCardForm";
 import { CardTile } from "@/components/board/CardTile";
 import { DropdownMenu } from "@/components/ui/DropdownMenu";
 import { Input } from "@/components/ui/Input";
+import { LIST_COLOR_PALETTE, getListColor } from "@/lib/board-theme";
 import { listsApi } from "@/lib/api/lists";
 import type { CardSummary } from "@/types/card";
 import type { BoardList } from "@/types/list";
@@ -45,6 +46,11 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
     onSuccess: invalidateLists,
   });
 
+  const setColor = useMutation({
+    mutationFn: (color: string) => listsApi.update(list.id, { color }),
+    onSuccess: invalidateLists,
+  });
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -52,14 +58,20 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
   };
 
   const cardIds = cards.map((c) => c.id);
+  const listColor = getListColor(list);
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="flex h-fit w-72 shrink-0 flex-col rounded-xl bg-[#F4F5F7] shadow-sm dark:bg-gray-800"
+      className="flex h-fit w-72 shrink-0 flex-col overflow-hidden rounded-xl bg-white shadow-sm dark:bg-black/25 dark:backdrop-blur-sm"
     >
-      <div {...attributes} {...listeners} className="flex cursor-grab items-center justify-between px-3 pt-3">
+      <div
+        {...attributes}
+        {...listeners}
+        className="flex cursor-grab items-center gap-2 px-3 py-2.5"
+        style={{ backgroundColor: listColor }}
+      >
         {editing ? (
           <form
             onSubmit={(e) => {
@@ -77,22 +89,24 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
             />
           </form>
         ) : (
-          <h3 onClick={() => setEditing(true)} className="flex-1 px-1 text-sm font-bold text-gray-800 dark:text-gray-100">
+          <h3 onClick={() => setEditing(true)} className="flex-1 truncate text-sm font-bold text-white drop-shadow-sm">
             {list.name}
           </h3>
         )}
+        <span className="shrink-0 rounded-full bg-black/25 px-2 py-0.5 text-xs font-bold text-white">{cards.length}</span>
         <DropdownMenu
           trigger={
             <button
-              className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+              className="shrink-0 rounded px-1.5 py-1 text-white/80 hover:bg-black/20 hover:text-white"
               aria-label="List menu">
               •••
             </button>
           }
           items={[
-            { label: "Rename list", onSelect: () => setEditing(true) },
-            { label: "Archive list", onSelect: () => archiveList.mutate() },
-            { label: "Delete list", onSelect: () => deleteList.mutate(), destructive: true },
+            { label: "Listeyi yeniden adlandır", onSelect: () => setEditing(true) },
+            ...LIST_COLOR_PALETTE.map((c) => ({ label: `Renk: ${c.name}`, onSelect: () => setColor.mutate(c.value) })),
+            { label: "Listeyi arşivle", onSelect: () => archiveList.mutate() },
+            { label: "Listeyi sil", onSelect: () => deleteList.mutate(), destructive: true },
           ]}
         />
       </div>

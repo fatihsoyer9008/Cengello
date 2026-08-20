@@ -41,6 +41,7 @@ class BoardMemberRead(BaseModel):
     board_id: uuid.UUID
     user_id: uuid.UUID
     role: BoardRole
+    is_starred: bool
 
 
 class BoardMemberCreate(BaseModel):
@@ -50,3 +51,7 @@ class BoardMemberCreate(BaseModel):
 
 class BoardMemberUpdate(BaseModel):
     role: BoardRole
+
+
+class BoardStarUpdate(BaseModel):
+    is_starred: bool

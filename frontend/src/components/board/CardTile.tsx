@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useRouter, usePathname } from "next/navigation";
 
 import { useBoardLookups } from "@/hooks/useBoardLookups";
+import { getUserColor } from "@/lib/board-theme";
 import { DUE_STATE_CLASSES, formatDueDate, getDueState } from "@/lib/due-date";
 import type { CardSummary } from "@/types/card";
 
@@ -93,7 +94,7 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
               <span
                 key={user!.id}
                 title={user!.full_name}
-                className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-blue-500 text-[10px] font-semibold text-white dark:border-gray-900"
+                className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold text-white dark:border-gray-900 ${getUserColor(user!.id)}`}
               >
                 {initials(user!.full_name)}
               </span>

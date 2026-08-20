@@ -15,5 +15,6 @@ class List(UUIDPkMixin, TimestampMixin, Base):
         PG_UUID(as_uuid=True), ForeignKey("boards.id", ondelete="CASCADE"), nullable=False
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    color: Mapped[str | None] = mapped_column(String(20))
     position: Mapped[float] = mapped_column(Float, nullable=False)
     is_archived: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")

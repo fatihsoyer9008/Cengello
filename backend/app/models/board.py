@@ -41,3 +41,4 @@ class BoardMember(UUIDPkMixin, CreatedAtMixin, Base):
         default=BoardRole.member,
         server_default=BoardRole.member.value,
     )
+    is_starred: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")

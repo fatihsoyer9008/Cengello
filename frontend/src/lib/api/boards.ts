@@ -30,6 +30,8 @@ export const boardsApi = {
   automationRules: (id: string) => apiFetch<AutomationRule[]>(`/boards/${id}/automation-rules`),
   activity: (id: string, cardId?: string, limit = 50) =>
     apiFetch<ActivityLogEntry[]>(`/boards/${id}/activity${toQuery({ card_id: cardId, limit: String(limit) })}`),
+  setStarred: (id: string, is_starred: boolean) =>
+    apiFetch<BoardMember>(`/boards/${id}/star`, { method: "PATCH", body: JSON.stringify({ is_starred }) }),
   members: (id: string) => apiFetch<BoardMember[]>(`/boards/${id}/members`),
   addMember: (id: string, data: BoardMemberCreate) =>
     apiFetch<BoardMember>(`/boards/${id}/members`, { method: "POST", body: JSON.stringify(data) }),

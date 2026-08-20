@@ -31,6 +31,7 @@ export interface BoardMember {
   board_id: string;
   user_id: string;
   role: BoardRole;
+  is_starred: boolean;
 }
 
 export interface BoardMemberCreate {

@@ -88,6 +88,16 @@ def update_member_role(db: Session, board_id: uuid.UUID, member_id: uuid.UUID, d
     return member
 
 
+def set_starred(db: Session, board_id: uuid.UUID, user_id: uuid.UUID, is_starred: bool) -> BoardMember:
+    member = db.query(BoardMember).filter_by(board_id=board_id, user_id=user_id).one_or_none()
+    if member is None:
+        raise NotFoundError("Board member not found")
+    member.is_starred = is_starred
+    db.commit()
+    db.refresh(member)
+    return member
+
+
 def remove_member(db: Session, board_id: uuid.UUID, member_id: uuid.UUID) -> None:
     member = db.get(BoardMember, member_id)
     if member is None or member.board_id != board_id:

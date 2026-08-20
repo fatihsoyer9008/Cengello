@@ -11,6 +11,26 @@ const BOARD_GRADIENTS = [
 
 const WORKSPACE_COLORS = ["bg-emerald-600", "bg-blue-600", "bg-purple-600", "bg-orange-600", "bg-pink-600", "bg-cyan-600"];
 
+const USER_COLORS = [
+  "bg-amber-500",
+  "bg-purple-500",
+  "bg-teal-500",
+  "bg-orange-500",
+  "bg-pink-500",
+  "bg-blue-500",
+  "bg-emerald-500",
+  "bg-rose-500",
+];
+
+export const LIST_COLOR_PALETTE: { name: string; value: string }[] = [
+  { name: "Altın", value: "#B08D2B" },
+  { name: "Yeşil", value: "#3E7B4F" },
+  { name: "Lacivert", value: "#1E3A6E" },
+  { name: "Mavi", value: "#2E5FA3" },
+  { name: "Mor", value: "#6D4AA0" },
+  { name: "Pembe", value: "#B0417E" },
+];
+
 function hash(input: string): number {
   let h = 0;
   for (let i = 0; i < input.length; i++) {
@@ -27,4 +47,12 @@ export function getBoardStyle(board: { id: string; background?: string | null })
 
 export function getWorkspaceColor(workspaceId: string): string {
   return WORKSPACE_COLORS[hash(workspaceId) % WORKSPACE_COLORS.length];
+}
+
+export function getUserColor(userId: string): string {
+  return USER_COLORS[hash(userId) % USER_COLORS.length];
+}
+
+export function getListColor(list: { id: string; color?: string | null }): string {
+  return list.color || LIST_COLOR_PALETTE[hash(list.id) % LIST_COLOR_PALETTE.length].value;
 }

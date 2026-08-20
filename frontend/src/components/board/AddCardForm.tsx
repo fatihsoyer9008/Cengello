@@ -24,9 +24,9 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full rounded-md px-2 py-1.5 text-left text-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+        className="w-full rounded-md px-2 py-1.5 text-left text-sm text-gray-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
       >
-        + Add a card
+        + Kart ekle
       </button>
     );
   }
@@ -43,9 +43,9 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
         autoFocus
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Card title"
+        placeholder="Kart başlığı"
         rows={2}
-        className="w-full resize-none rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+        className="w-full resize-none rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:border-white/10 dark:bg-white/10 dark:text-gray-100"
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -56,10 +56,10 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
       />
       <div className="flex gap-2">
         <Button type="submit" disabled={createCard.isPending || !title.trim()}>
-          Add
+          Ekle
         </Button>
         <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-          Cancel
+          İptal
         </Button>
       </div>
     </form>
