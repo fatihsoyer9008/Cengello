@@ -1,9 +1,8 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { Paperclip } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
 import { useCardAttachments } from "@/hooks/useCardQueries";
 import { attachmentsApi } from "@/lib/api/attachments";
 import { cardsApi } from "@/lib/api/cards";
@@ -12,18 +11,12 @@ import type { Card } from "@/types/card";
 export function CardAttachments({ boardId, card }: { boardId: string; card: Card }) {
   const { data: attachments } = useCardAttachments(card.id);
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["cards", card.id, "attachments"] });
     queryClient.invalidateQueries({ queryKey: ["cards", card.id] });
     queryClient.invalidateQueries({ queryKey: ["boards", boardId, "cards"] });
   };
-
-  const upload = useMutation({
-    mutationFn: (file: File) => attachmentsApi.upload(card.id, file),
-    onSuccess: invalidate,
-  });
 
   const remove = useMutation({
     mutationFn: (id: string) => attachmentsApi.remove(id),
@@ -46,47 +39,45 @@ export function CardAttachments({ boardId, card }: { boardId: string; card: Card
     URL.revokeObjectURL(url);
   }
 
+  if (!attachments || attachments.length === 0) return null;
+
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Attachments</p>
-        <Button variant="secondary" onClick={() => fileInputRef.current?.click()} disabled={upload.isPending}>
-          {upload.isPending ? "Uploading…" : "Upload"}
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) upload.mutate(file);
-            e.target.value = "";
-          }}
-        />
+    <div>
+      <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+        <Paperclip className="h-4 w-4" />
+        Eklentiler
       </div>
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 dark:divide-gray-700 dark:border-gray-700">
-        {attachments?.map((att) => (
-          <li key={att.id} className="flex items-center justify-between px-3 py-2 text-sm">
-            <button onClick={() => handleDownload(att.id, att.filename)} className="truncate text-left text-blue-600 hover:underline dark:text-blue-400">
+      <ul className="divide-y divide-gray-200 rounded-md border border-gray-200 dark:divide-white/10 dark:border-white/10">
+        {attachments.map((att) => (
+          <li key={att.id} className="flex items-center justify-between gap-2 px-3 py-2 text-sm">
+            <button
+              onClick={() => handleDownload(att.id, att.filename)}
+              className="truncate text-left text-brand hover:underline dark:text-blue-400"
+            >
               {att.filename}
             </button>
             <div className="flex shrink-0 items-center gap-2 text-xs">
               {card.cover_attachment_id === att.id ? (
                 <button onClick={() => setCover.mutate(null)} className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">
-                  Remove cover
+                  Kapağı kaldır
                 </button>
               ) : (
                 <button onClick={() => setCover.mutate(att.id)} className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">
-                  Set as cover
+                  Kapak yap
                 </button>
               )}
-              <button onClick={() => remove.mutate(att.id)} className="text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400">
-                Delete
+              <button
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  remove.mutate(att.id);
+                }}
+                className="text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400"
+              >
+                Sil
               </button>
             </div>
           </li>
         ))}
-        {attachments?.length === 0 && <li className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500">No attachments yet.</li>}
       </ul>
     </div>
   );

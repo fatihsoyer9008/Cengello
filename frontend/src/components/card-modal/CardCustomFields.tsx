@@ -24,7 +24,7 @@ export function CardCustomFields({ boardId, cardId }: { boardId: string; cardId:
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Custom fields</p>
+      <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">Özel alanlar</p>
       <div className="space-y-2">
         {fields.map((field) => {
           const current = valueByFieldId.get(field.id);
