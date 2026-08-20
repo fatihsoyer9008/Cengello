@@ -48,16 +48,66 @@ export interface BoardBackgroundOption {
   id: string;
   name: string;
   type: "image" | "gradient";
+  /** Full-resolution value persisted to board.background and used for the real board canvas. */
   value: string;
+  /** Lightweight variant used for the picker thumbnail so the grid stays fast to load. */
+  thumb: string;
 }
 
+function unsplashThumb(baseUrl: string): string {
+  return `${baseUrl}?w=300&q=70&fit=crop&auto=format`;
+}
+
+const BOARD_IMAGE_BASE = {
+  lake: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1",
+  purple: "https://images.unsplash.com/photo-1557682250-33bd709cbe85",
+  space: "https://images.unsplash.com/photo-1464802686167-b939a6910659",
+  rain: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee",
+};
+
 export const BOARD_BACKGROUND_OPTIONS: BoardBackgroundOption[] = [
-  { id: "forest", name: "Orman", type: "image", value: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=400&q=80" },
-  { id: "dark-forest", name: "Koyu orman", type: "image", value: "https://images.unsplash.com/photo-1511497584788-876760111969?w=400&q=80" },
-  { id: "mountain", name: "Dağ manzarası", type: "image", value: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=400&q=80" },
-  { id: "sunset", name: "Gün batımı", type: "image", value: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80" },
-  { id: "blue-gradient", name: "Mavi gradyan", type: "gradient", value: "linear-gradient(135deg, #0C66E4 0%, #1E3A6E 100%)" },
-  { id: "purple-gradient", name: "Mor gradyan", type: "gradient", value: "linear-gradient(135deg, #6E5DC6 0%, #2E1065 100%)" },
+  {
+    id: "lake",
+    name: "Doğa / Göl",
+    type: "image",
+    value: `${BOARD_IMAGE_BASE.lake}?w=1920&q=100`,
+    thumb: unsplashThumb(BOARD_IMAGE_BASE.lake),
+  },
+  {
+    id: "purple-abstract",
+    name: "Soyut Mor/Pembe",
+    type: "image",
+    value: `${BOARD_IMAGE_BASE.purple}?w=1920&q=100`,
+    thumb: unsplashThumb(BOARD_IMAGE_BASE.purple),
+  },
+  {
+    id: "space",
+    name: "Uzay / Yıldızlar",
+    type: "image",
+    value: `${BOARD_IMAGE_BASE.space}?w=1920&q=100`,
+    thumb: unsplashThumb(BOARD_IMAGE_BASE.space),
+  },
+  {
+    id: "rain",
+    name: "Minimalist Yağmur",
+    type: "image",
+    value: `${BOARD_IMAGE_BASE.rain}?w=1920&q=100`,
+    thumb: unsplashThumb(BOARD_IMAGE_BASE.rain),
+  },
+  {
+    id: "blue-gradient",
+    name: "Mavi gradyan",
+    type: "gradient",
+    value: "linear-gradient(135deg, #0C66E4 0%, #1E3A6E 100%)",
+    thumb: "linear-gradient(135deg, #0C66E4 0%, #1E3A6E 100%)",
+  },
+  {
+    id: "purple-gradient",
+    name: "Mor gradyan",
+    type: "gradient",
+    value: "linear-gradient(135deg, #6E5DC6 0%, #2E1065 100%)",
+    thumb: "linear-gradient(135deg, #6E5DC6 0%, #2E1065 100%)",
+  },
 ];
 
 export function getBoardStyle(board: { id: string; background?: string | null }): CSSProperties {
