@@ -16,7 +16,8 @@ services:
       retries: 10
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     env_file: .env
     environment:
       POSTGRES_HOST: db
@@ -25,29 +26,20 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./backend:/app
       - uploads_data:/app/uploads
     ports:
       - "127.0.0.1:${BACKEND_HOST_PORT:-8000}:8000"
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   frontend:
     build:
       context: ./frontend
-      target: dev
+      target: runner
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     env_file: .env
-    environment:
-      # Docker Desktop's bind mount on Windows doesn't reliably forward inotify
-      # events into the container, so Next.js's file watcher misses host edits
-      # without polling -- this trades a bit of CPU for hot reload actually working.
-      WATCHPACK_POLLING: "true"
-      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
     ports:
       - "127.0.0.1:${FRONTEND_HOST_PORT:-3000}:3000"
 

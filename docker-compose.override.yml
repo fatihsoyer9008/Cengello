@@ -1,0 +1,28 @@
+# Local development only. Docker Compose loads this automatically
+# alongside docker-compose.yml as long as you don't pass explicit -f
+# flags (i.e. plain `docker compose up`/`run`/`build`) -- which is
+# exactly how every command in the README's "Getting Started" section
+# is written. It is intentionally NOT included in production, since
+# that always runs with explicit -f flags
+# (-f docker-compose.yml -f docker-compose.prod.yml), which disables
+# this auto-loading.
+services:
+  backend:
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      target: dev
+    environment:
+      # Docker Desktop's bind mount on Windows doesn't reliably forward inotify
+      # events into the container, so Next.js's file watcher misses host edits
+      # without polling -- this trades a bit of CPU for hot reload actually working.
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
