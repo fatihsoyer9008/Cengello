@@ -32,7 +32,9 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: dev
     env_file: .env
     environment:
       # Docker Desktop's bind mount on Windows doesn't reliably forward inotify

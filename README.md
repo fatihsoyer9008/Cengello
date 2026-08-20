@@ -6,7 +6,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=flat-square)](#)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue?style=flat-square)](#)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)](#-disclaimer--legal-notice)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](#-tech-stack)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi)](#-tech-stack)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)](#-tech-stack)
@@ -24,9 +24,7 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 
 > 🖼️ **Screenshot / Demo**
 >
-> ![Cengello Demo](docs/screenshot-placeholder.png)
->
-> *(Replace this with a real screenshot or GIF of the board view, e.g. `docs/demo.gif`)*
+> _A screenshot or GIF of the board view goes here — e.g. add `docs/demo.gif` or `docs/demo.png` and reference it as `![Cengello Demo](docs/demo.gif)`._
 
 ---
 
@@ -34,7 +32,7 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 
 - 🗃️ **Workspaces & Boards** — organize boards into team workspaces with role-based membership (owner / admin / member).
 - 📌 **Kanban Board View** — colored, draggable lists and cards with live drag-and-drop reordering (powered by `dnd-kit`).
-- 🎨 **Custom Board Backgrounds** — pick a high-res photo background or a gradient when creating a board, with a live preview.
+- 🎨 **Custom Board Backgrounds & Visibility** — pick a high-res photo background or a gradient with a live preview, and set each board to private, workspace-visible, or public.
 - 🌓 **Dark Mode UI** — a polished dark theme across the whole app, toggleable at any time.
 - ✅ **Checklists & Progress Tracking** — nested checklist items with live completion percentage bars, multi-line paste (one item per line), and rapid-fire "Enter to add another" input for both cards and checklist items.
 - 🔗 **Invite via Link** — generate a shareable board link from the "Paylaş" menu; anyone who opens it (after signing in) joins the board automatically.
@@ -84,8 +82,8 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/cengello.git
-cd cengello
+git clone https://github.com/fatihsoyer9008/Cengello.git
+cd Cengello
 ```
 
 ### 2. Configure environment variables
@@ -176,10 +174,14 @@ Want a teammate developing against the same data instead of everyone getting the
 
 ```
 cengello/
-├── backend/    FastAPI app, SQLAlchemy models, Alembic migrations, pytest suite
-├── frontend/   Next.js app (App Router), Tailwind CSS, React Query
-├── infra/      Caddyfile for the production reverse proxy
-└── docker-compose*.yml
+├── backend/            FastAPI app, SQLAlchemy models, Alembic migrations, pytest suite
+├── frontend/           Next.js app (App Router), Tailwind CSS, React Query
+├── infra/              Caddyfile for the production reverse proxy
+├── docs/               Supplementary guides (e.g. remote-database-setup.md)
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── .env.example
+└── LICENSE
 ```
 
 ---
