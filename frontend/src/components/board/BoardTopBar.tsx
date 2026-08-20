@@ -1,12 +1,13 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Bell, LayoutGrid, MoreHorizontal, Settings, Share2, Star } from "lucide-react";
+import { Bell, Check, Copy, LayoutGrid, Link2, MoreHorizontal, Settings, Share2, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BoardMembersManager } from "@/components/admin/BoardMembersManager";
+import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { DropdownMenu } from "@/components/ui/DropdownMenu";
 import { useBoardLookups } from "@/hooks/useBoardLookups";
@@ -24,6 +25,57 @@ function initials(fullName: string): string {
     .join("")
     .slice(0, 2)
     .toUpperCase();
+}
+
+function ShareLinkSection({ boardId, open }: { boardId: string; open: boolean }) {
+  const [copied, setCopied] = useState(false);
+  const generateLink = useMutation({ mutationFn: () => boardsApi.share(boardId) });
+
+  useEffect(() => {
+    if (open && !generateLink.data && !generateLink.isPending) {
+      generateLink.mutate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const url = generateLink.data ? `${window.location.origin}/join/${generateLink.data.token}` : null;
+
+  async function handleCopy() {
+    if (!url) return;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="mb-4 rounded-md border border-gray-200 p-3 dark:border-white/10">
+      <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-gray-700 dark:text-gray-200">
+        <Link2 className="h-3.5 w-3.5" />
+        Bağlantıyla davet et
+      </p>
+      {url ? (
+        <div className="flex gap-2">
+          <input
+            readOnly
+            value={url}
+            onFocus={(e) => e.target.select()}
+            className="w-full truncate rounded border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200"
+          />
+          <Button type="button" variant="secondary" onClick={handleCopy} className="shrink-0">
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? "Kopyalandı" : "Kopyala"}
+          </Button>
+        </div>
+      ) : generateLink.isError ? (
+        <p className="text-sm text-red-500">Bağlantı oluşturulamadı.</p>
+      ) : (
+        <p className="text-sm text-gray-400 dark:text-gray-500">Bağlantı oluşturuluyor…</p>
+      )}
+      <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+        Bu bağlantıya sahip olan herkes panoya üye olarak katılabilir.
+      </p>
+    </div>
+  );
 }
 
 export function BoardTopBar({ board }: { board: Board }) {
@@ -120,6 +172,7 @@ export function BoardTopBar({ board }: { board: Board }) {
       />
 
       <Dialog open={shareOpen} onOpenChange={setShareOpen} title="Panoyu paylaş" widthClassName="max-w-lg">
+        <ShareLinkSection boardId={board.id} open={shareOpen} />
         <BoardMembersManager boardId={board.id} />
       </Dialog>
     </header>

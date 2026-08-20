@@ -46,3 +46,15 @@ export interface BoardMemberCreate {
 export interface BoardMemberUpdate {
   role: BoardRole;
 }
+
+export interface BoardInviteLink {
+  id: string;
+  board_id: string;
+  token: string;
+  created_at: string;
+}
+
+export interface BoardJoinResult {
+  board_id: string;
+  already_member: boolean;
+}

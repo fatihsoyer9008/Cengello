@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { cardsApi } from "@/lib/api/cards";
@@ -10,13 +10,15 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const queryClient = useQueryClient();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const createCard = useMutation({
     mutationFn: () => cardsApi.create({ title, list_id: listId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["boards", boardId, "cards"] });
       setTitle("");
-      setOpen(false);
+      // Keep the form open and focused so the user can add several cards in a row.
+      textareaRef.current?.focus();
     },
   });
 
@@ -40,6 +42,7 @@ export function AddCardForm({ boardId, listId }: { boardId: string; listId: stri
       className="space-y-1.5"
     >
       <textarea
+        ref={textareaRef}
         autoFocus
         value={title}
         onChange={(e) => setTitle(e.target.value)}
