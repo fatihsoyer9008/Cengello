@@ -62,17 +62,17 @@ export function CustomFieldsManager({ boardId }: { boardId: string }) {
           setError(null);
           createField.mutate();
         }}
-        className="space-y-3 rounded-md border border-gray-200 bg-white p-3"
+        className="space-y-3 rounded-md border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
       >
         <div className="flex flex-wrap gap-3">
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">Name</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Name</label>
             <Input required value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">Type</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Type</label>
             <select
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               value={fieldType}
               onChange={(e) => setFieldType(e.target.value as CustomFieldType)}
             >
@@ -87,10 +87,10 @@ export function CustomFieldsManager({ boardId }: { boardId: string }) {
 
         {fieldType === "dropdown" && (
           <div className="space-y-2">
-            <label className="text-xs font-medium text-gray-600">Options</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Options</label>
             <div className="flex flex-wrap gap-1.5">
               {options.map((opt) => (
-                <span key={opt.id} className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
+                <span key={opt.id} className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-200">
                   {opt.label}
                 </span>
               ))}
@@ -118,21 +118,21 @@ export function CustomFieldsManager({ boardId }: { boardId: string }) {
           Add custom field
         </Button>
       </form>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {fields?.map((field) => (
           <li key={field.id} className="flex items-center justify-between px-3 py-2">
             <div>
-              <span className="font-medium text-gray-800">{field.name}</span>
-              <span className="ml-2 text-xs text-gray-400">{field.field_type}</span>
+              <span className="font-medium text-gray-800 dark:text-gray-200">{field.name}</span>
+              <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">{field.field_type}</span>
             </div>
             <Button variant="danger" onClick={() => removeField.mutate(field.id)}>
               Delete
             </Button>
           </li>
         ))}
-        {fields?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400">No custom fields yet.</li>}
+        {fields?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400 dark:text-gray-500">No custom fields yet.</li>}
       </ul>
     </div>
   );

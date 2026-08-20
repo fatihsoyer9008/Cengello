@@ -17,19 +17,19 @@ export function CardDetailModal({ boardId, cardId, onClose }: { boardId: string;
   return (
     <RadixDialog.Root open onOpenChange={(open) => !open && onClose()}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
-        <RadixDialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white p-6 shadow-xl focus:outline-none">
+        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-black/40 dark:bg-black/60" />
+        <RadixDialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white p-6 shadow-xl focus:outline-none dark:bg-gray-800">
           <RadixDialog.Close asChild>
             <button
               aria-label="Close"
-              className="absolute right-4 top-4 rounded p-1 text-lg leading-none text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              className="absolute right-4 top-4 rounded p-1 text-lg leading-none text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             >
               ×
             </button>
           </RadixDialog.Close>
 
           {isLoading || !card ? (
-            <p className="py-10 text-center text-gray-500">Loading card…</p>
+            <p className="py-10 text-center text-gray-500 dark:text-gray-400">Loading card…</p>
           ) : (
             <div className="space-y-6 pr-6">
               <RadixDialog.Title asChild>

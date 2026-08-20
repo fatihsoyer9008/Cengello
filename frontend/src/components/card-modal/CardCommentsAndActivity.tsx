@@ -37,7 +37,7 @@ function CommentsPanel({ cardId }: { cardId: string }) {
           onChange={(e) => setBody(e.target.value)}
           rows={2}
           placeholder="Write a comment…"
-          className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-gray-300 bg-white p-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
         />
         <Button type="submit" disabled={createComment.isPending || !body.trim()}>
           Comment
@@ -45,9 +45,9 @@ function CommentsPanel({ cardId }: { cardId: string }) {
       </form>
       <ul className="space-y-3">
         {comments?.map((comment) => (
-          <li key={comment.id} className="rounded-md bg-gray-50 p-2.5">
+          <li key={comment.id} className="rounded-md bg-gray-50 p-2.5 dark:bg-gray-900/60">
             <Markdown>{comment.body}</Markdown>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
               {new Date(comment.created_at).toLocaleString()}
               {comment.is_edited && " (edited)"}
             </p>
@@ -63,13 +63,13 @@ function ActivityPanel({ cardId, enabled }: { cardId: string; enabled: boolean }
   return (
     <ul className="space-y-2">
       {activity?.map((entry) => (
-        <li key={entry.id} className="text-xs text-gray-500">
-          <span className="font-medium text-gray-700">{entry.action_type}</span>
-          {entry.automation_rule_id && <span className="ml-1 text-purple-600">(automation)</span>}
+        <li key={entry.id} className="text-xs text-gray-500 dark:text-gray-400">
+          <span className="font-medium text-gray-700 dark:text-gray-200">{entry.action_type}</span>
+          {entry.automation_rule_id && <span className="ml-1 text-purple-600 dark:text-purple-400">(automation)</span>}
           <span className="ml-2">{new Date(entry.created_at).toLocaleString()}</span>
         </li>
       ))}
-      {activity?.length === 0 && <li className="text-xs text-gray-400">No activity yet.</li>}
+      {activity?.length === 0 && <li className="text-xs text-gray-400 dark:text-gray-500">No activity yet.</li>}
     </ul>
   );
 }

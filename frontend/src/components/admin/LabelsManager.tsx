@@ -49,21 +49,21 @@ export function LabelsManager({ boardId }: { boardId: string }) {
           setError(null);
           createLabel.mutate();
         }}
-        className="flex flex-wrap items-end gap-3 rounded-md border border-gray-200 bg-white p-3"
+        className="flex flex-wrap items-end gap-3 rounded-md border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
       >
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-600">Name</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Name</label>
           <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Optional" />
         </div>
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-600">Color</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Color</label>
           <div className="flex gap-1.5">
             {PRESET_COLORS.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
-                className={`h-7 w-7 rounded ${color === c ? "ring-2 ring-offset-1 ring-gray-800" : ""}`}
+                className={`h-7 w-7 rounded ${color === c ? "ring-2 ring-offset-1 ring-gray-800 dark:ring-offset-gray-800" : ""}`}
                 style={{ backgroundColor: c }}
                 aria-label={c}
               />
@@ -74,9 +74,9 @@ export function LabelsManager({ boardId }: { boardId: string }) {
           Add label
         </Button>
       </form>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {labels?.map((label) => (
           <li key={label.id} className="flex items-center justify-between gap-3 px-3 py-2">
             <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export function LabelsManager({ boardId }: { boardId: string }) {
             </Button>
           </li>
         ))}
-        {labels?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400">No labels yet.</li>}
+        {labels?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400 dark:text-gray-500">No labels yet.</li>}
       </ul>
     </div>
   );

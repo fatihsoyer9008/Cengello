@@ -65,7 +65,7 @@ export function CardDetailMeta({ boardId, card }: { boardId: string; card: Card 
   return (
     <div className="flex flex-wrap gap-4 text-sm">
       <div>
-        <p className="mb-1 font-medium text-gray-600">Members</p>
+        <p className="mb-1 font-medium text-gray-600 dark:text-gray-400">Members</p>
         <div className="flex flex-wrap items-center gap-1">
           {cardMembers?.map((m) => (
             <span key={m.id} title={m.email} className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-xs font-semibold text-white">
@@ -74,15 +74,15 @@ export function CardDetailMeta({ boardId, card }: { boardId: string; card: Card 
           ))}
           <Popover
             trigger={
-              <button className="flex h-7 w-7 items-center justify-center rounded-full border border-dashed border-gray-400 text-gray-500 hover:bg-gray-100">
+              <button className="flex h-7 w-7 items-center justify-center rounded-full border border-dashed border-gray-400 text-gray-500 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
                 +
               </button>
             }
           >
-            <p className="mb-2 font-medium text-gray-700">Board members</p>
+            <p className="mb-2 font-medium text-gray-700 dark:text-gray-300">Board members</p>
             <div className="max-h-48 space-y-1 overflow-y-auto">
               {boardUsers?.map((u) => (
-                <label key={u.id} className="flex items-center gap-2 rounded px-1 py-1 hover:bg-gray-50">
+                <label key={u.id} className="flex items-center gap-2 rounded px-1 py-1 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <input
                     type="checkbox"
                     checked={cardMemberIds.has(u.id)}
@@ -97,7 +97,7 @@ export function CardDetailMeta({ boardId, card }: { boardId: string; card: Card 
       </div>
 
       <div>
-        <p className="mb-1 font-medium text-gray-600">Labels</p>
+        <p className="mb-1 font-medium text-gray-600 dark:text-gray-400">Labels</p>
         <div className="flex flex-wrap items-center gap-1">
           {cardLabels?.map((l) => (
             <span key={l.id} className="rounded px-2 py-1 text-xs text-white" style={{ backgroundColor: l.color }}>
@@ -106,15 +106,15 @@ export function CardDetailMeta({ boardId, card }: { boardId: string; card: Card 
           ))}
           <Popover
             trigger={
-              <button className="flex h-7 w-7 items-center justify-center rounded border border-dashed border-gray-400 text-gray-500 hover:bg-gray-100">
+              <button className="flex h-7 w-7 items-center justify-center rounded border border-dashed border-gray-400 text-gray-500 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
                 +
               </button>
             }
           >
-            <p className="mb-2 font-medium text-gray-700">Board labels</p>
+            <p className="mb-2 font-medium text-gray-700 dark:text-gray-300">Board labels</p>
             <div className="max-h-48 space-y-1 overflow-y-auto">
               {boardLabels?.map((l) => (
-                <label key={l.id} className="flex items-center gap-2 rounded px-1 py-1 hover:bg-gray-50">
+                <label key={l.id} className="flex items-center gap-2 rounded px-1 py-1 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <input
                     type="checkbox"
                     checked={cardLabelIds.has(l.id)}
@@ -131,11 +131,11 @@ export function CardDetailMeta({ boardId, card }: { boardId: string; card: Card 
       </div>
 
       <div>
-        <p className="mb-1 font-medium text-gray-600">Due date</p>
+        <p className="mb-1 font-medium text-gray-600 dark:text-gray-400">Due date</p>
         <div className="flex items-center gap-2">
           <input
             type="datetime-local"
-            className="rounded border border-gray-300 px-2 py-1 text-xs"
+            className="rounded border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
             value={card.due_date ? card.due_date.slice(0, 16) : ""}
             onChange={(e) => setDueDate.mutate(e.target.value ? new Date(e.target.value).toISOString() : null)}
           />

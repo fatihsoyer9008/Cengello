@@ -57,7 +57,7 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
     <div
       ref={setNodeRef}
       style={style}
-      className="flex h-fit w-72 shrink-0 flex-col rounded-xl bg-[#F4F5F7] shadow-sm"
+      className="flex h-fit w-72 shrink-0 flex-col rounded-xl bg-[#F4F5F7] shadow-sm dark:bg-gray-800"
     >
       <div {...attributes} {...listeners} className="flex cursor-grab items-center justify-between px-3 pt-3">
         {editing ? (
@@ -77,13 +77,15 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
             />
           </form>
         ) : (
-          <h3 onClick={() => setEditing(true)} className="flex-1 px-1 text-sm font-bold text-gray-800">
+          <h3 onClick={() => setEditing(true)} className="flex-1 px-1 text-sm font-bold text-gray-800 dark:text-gray-100">
             {list.name}
           </h3>
         )}
         <DropdownMenu
           trigger={
-            <button className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700" aria-label="List menu">
+            <button
+              className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+              aria-label="List menu">
               •••
             </button>
           }

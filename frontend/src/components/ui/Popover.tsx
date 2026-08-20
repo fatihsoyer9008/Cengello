@@ -10,7 +10,7 @@ export function Popover({ trigger, children }: { trigger: ReactNode; children: R
       <RadixPopover.Portal>
         <RadixPopover.Content
           sideOffset={6}
-          className="z-50 w-64 rounded-md border border-gray-200 bg-white p-3 text-sm shadow-lg"
+          className="z-50 w-64 rounded-md border border-gray-200 bg-white p-3 text-sm text-gray-900 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         >
           {children}
         </RadixPopover.Content>

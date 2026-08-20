@@ -25,7 +25,7 @@ export function AddListForm({ boardId }: { boardId: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="h-fit w-72 shrink-0 rounded-xl bg-white/50 px-3 py-2.5 text-left text-sm font-medium text-gray-600 hover:bg-white"
+        className="h-fit w-72 shrink-0 rounded-xl bg-white/50 px-3 py-2.5 text-left text-sm font-medium text-gray-600 hover:bg-white dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800"
       >
         + Add another list
       </button>
@@ -38,7 +38,7 @@ export function AddListForm({ boardId }: { boardId: string }) {
         e.preventDefault();
         if (name.trim()) createList.mutate();
       }}
-      className="h-fit w-72 shrink-0 space-y-1.5 rounded-xl bg-[#F4F5F7] p-2.5 shadow-sm"
+      className="h-fit w-72 shrink-0 space-y-1.5 rounded-xl bg-[#F4F5F7] p-2.5 shadow-sm dark:bg-gray-800"
     >
       <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="List name" />
       <div className="flex gap-2">

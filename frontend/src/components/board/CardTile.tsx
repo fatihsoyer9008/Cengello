@@ -43,7 +43,7 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
       {...attributes}
       {...listeners}
       onClick={() => router.push(`${pathname}?card=${card.id}`)}
-      className="cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
+      className="cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600"
     >
       {cardLabels.length > 0 && (
         <div className="flex h-1.5 w-full">
@@ -54,9 +54,9 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
       )}
 
       <div className="space-y-2 p-2.5">
-        <p className="text-sm leading-snug text-gray-900">{card.title}</p>
+        <p className="text-sm leading-snug text-gray-900 dark:text-gray-100">{card.title}</p>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
           {dueState !== "none" && (
             <span className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 ${DUE_STATE_CLASSES[dueState]}`}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -68,7 +68,7 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
           )}
 
           {card.checklist_total > 0 && (
-            <span className="inline-flex items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5">
+            <span className="inline-flex items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-700 dark:text-gray-300">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M9 11l3 3L22 4" />
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
@@ -78,7 +78,7 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
           )}
 
           {card.comment_count > 0 && (
-            <span className="inline-flex items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5">
+            <span className="inline-flex items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-700 dark:text-gray-300">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
@@ -93,7 +93,7 @@ export function CardTile({ boardId, card }: { boardId: string; card: CardSummary
               <span
                 key={user!.id}
                 title={user!.full_name}
-                className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-blue-500 text-[10px] font-semibold text-white"
+                className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-blue-500 text-[10px] font-semibold text-white dark:border-gray-900"
               >
                 {initials(user!.full_name)}
               </span>

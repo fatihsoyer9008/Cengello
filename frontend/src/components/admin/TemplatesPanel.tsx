@@ -54,7 +54,7 @@ export function TemplatesPanel({ boardId }: { boardId: string }) {
           setError(null);
           captureTemplate.mutate();
         }}
-        className="flex gap-2 rounded-md border border-gray-200 bg-white p-3"
+        className="flex gap-2 rounded-md border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
       >
         <Input
           required
@@ -66,12 +66,12 @@ export function TemplatesPanel({ boardId }: { boardId: string }) {
           Save this board as template
         </Button>
       </form>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {templates?.map((template) => (
           <li key={template.id} className="flex items-center justify-between px-3 py-2">
-            <span className="text-sm font-medium text-gray-800">{template.name}</span>
+            <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{template.name}</span>
             <div className="flex items-center gap-2">
               <Button variant="secondary" onClick={() => applyTemplate.mutate(template.id)} disabled={applyTemplate.isPending}>
                 Create board from this
@@ -82,7 +82,7 @@ export function TemplatesPanel({ boardId }: { boardId: string }) {
             </div>
           </li>
         ))}
-        {templates?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400">No board templates yet.</li>}
+        {templates?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400 dark:text-gray-500">No board templates yet.</li>}
       </ul>
     </div>
   );

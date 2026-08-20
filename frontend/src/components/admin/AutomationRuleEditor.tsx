@@ -32,7 +32,7 @@ function TriggerConfigFields({
   if (triggerType === "card_moved_to_list") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.to_list_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, to_list_id: e.target.value })}
       >
@@ -48,7 +48,7 @@ function TriggerConfigFields({
   if (triggerType === "card_created_in_list") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.list_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, list_id: e.target.value })}
       >
@@ -64,7 +64,7 @@ function TriggerConfigFields({
   if (triggerType === "label_added") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.label_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, label_id: e.target.value })}
       >
@@ -116,7 +116,7 @@ function ActionConfigFields({
   if (action.action_type === "add_label" || action.action_type === "remove_label") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.label_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, label_id: e.target.value })}
       >
@@ -132,7 +132,7 @@ function ActionConfigFields({
   if (action.action_type === "move_card_to_list") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.list_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, list_id: e.target.value, position: "bottom" })}
       >
@@ -148,7 +148,7 @@ function ActionConfigFields({
   if (action.action_type === "assign_member") {
     return (
       <select
-        className="rounded border border-gray-300 px-2 py-1 text-sm"
+        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
         value={(config.user_id as string) ?? ""}
         onChange={(e) => onChange({ ...config, user_id: e.target.value })}
       >
@@ -170,7 +170,7 @@ function ActionConfigFields({
       />
     );
   }
-  return <span className="text-xs text-gray-400">No configuration needed.</span>;
+  return <span className="text-xs text-gray-400 dark:text-gray-500">No configuration needed.</span>;
 }
 
 export function AutomationRuleEditor({ boardId }: { boardId: string }) {
@@ -235,18 +235,18 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
           setError(null);
           createRule.mutate();
         }}
-        className="space-y-3 rounded-md border border-gray-200 bg-white p-3"
+        className="space-y-3 rounded-md border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
       >
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-600">Rule name</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Rule name</label>
           <Input required value={name} onChange={(e) => setName(e.target.value)} />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-600">When…</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">When…</label>
           <div className="flex items-center gap-2">
             <select
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               value={triggerType}
               onChange={(e) => {
                 setTriggerType(e.target.value);
@@ -270,11 +270,11 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-medium text-gray-600">Then…</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Then…</label>
           {actions.map((action, index) => (
             <div key={index} className="flex items-center gap-2">
               <select
-                className="rounded border border-gray-300 px-2 py-1 text-sm"
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                 value={action.action_type}
                 onChange={(e) => {
                   const next = [...actions];
@@ -303,7 +303,7 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
                 <button
                   type="button"
                   onClick={() => setActions(actions.filter((_, i) => i !== index))}
-                  className="text-xs text-gray-400 hover:text-red-600"
+                  className="text-xs text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400"
                 >
                   Remove
                 </button>
@@ -313,7 +313,7 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
           <button
             type="button"
             onClick={() => setActions([...actions, { action_type: ACTION_TYPES[0], action_config: {} }])}
-            className="text-xs text-blue-600 hover:underline"
+            className="text-xs text-blue-600 hover:underline dark:text-blue-400"
           >
             + Add another action
           </button>
@@ -323,19 +323,19 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
           Create rule
         </Button>
       </form>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {rules?.map((rule) => (
           <li key={rule.id} className="flex items-center justify-between px-3 py-2">
             <div>
-              <p className="text-sm font-medium text-gray-800">{rule.name}</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{rule.name}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">
                 {rule.trigger_type} → {rule.actions.map((a) => a.action_type).join(", ")}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <label className="flex items-center gap-1 text-xs text-gray-600">
+              <label className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
                 <input
                   type="checkbox"
                   checked={rule.is_enabled}
@@ -349,7 +349,7 @@ export function AutomationRuleEditor({ boardId }: { boardId: string }) {
             </div>
           </li>
         ))}
-        {rules?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400">No automation rules yet.</li>}
+        {rules?.length === 0 && <li className="px-3 py-3 text-sm text-gray-400 dark:text-gray-500">No automation rules yet.</li>}
       </ul>
     </div>
   );

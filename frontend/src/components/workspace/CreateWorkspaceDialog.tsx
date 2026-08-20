@@ -43,9 +43,9 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: { open: boolean; o
         }}
         className="space-y-4"
       >
-        {error && <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">{error}</p>}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Name</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
           <Input required value={name} onChange={(e) => setName(e.target.value)} autoFocus />
         </div>
         <Button type="submit" className="w-full" disabled={mutation.isPending}>

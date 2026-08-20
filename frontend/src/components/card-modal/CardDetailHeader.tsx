@@ -35,13 +35,13 @@ export function CardDetailHeader({ boardId, card }: { boardId: string; card: Car
             onChange={(e) => setTitle(e.target.value)}
             onBlur={() => title.trim() && title !== card.title && updateTitle.mutate()}
             rows={2}
-            className="w-full resize-none rounded-md border border-gray-300 px-2 py-1.5 text-lg font-semibold focus:border-blue-500 focus:outline-none"
+            className="w-full resize-none rounded-md border border-gray-300 bg-white px-2 py-1.5 text-lg font-semibold text-gray-900 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           />
         </form>
       ) : (
         <h2
           onClick={() => setEditing(true)}
-          className="cursor-text rounded px-1 -mx-1 text-lg font-semibold text-gray-900 hover:bg-gray-50"
+          className="cursor-text rounded px-1 -mx-1 text-lg font-semibold text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-700"
         >
           {card.title}
         </h2>

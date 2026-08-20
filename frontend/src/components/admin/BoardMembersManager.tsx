@@ -60,15 +60,15 @@ export function BoardMembersManager({ boardId }: { boardId: string }) {
           Invite
         </Button>
       </form>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {members?.map((member) => (
           <li key={member.id} className="flex items-center justify-between px-3 py-2">
-            <span className="text-sm text-gray-800">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
+            <span className="text-sm text-gray-800 dark:text-gray-200">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
             <div className="flex items-center gap-2">
               <select
-                className="rounded border border-gray-300 px-2 py-1 text-sm"
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                 value={member.role}
                 onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as BoardRole })}
               >

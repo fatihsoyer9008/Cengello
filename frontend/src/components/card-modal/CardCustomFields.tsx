@@ -24,13 +24,13 @@ export function CardCustomFields({ boardId, cardId }: { boardId: string; cardId:
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-600">Custom fields</p>
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Custom fields</p>
       <div className="space-y-2">
         {fields.map((field) => {
           const current = valueByFieldId.get(field.id);
           return (
             <div key={field.id} className="flex items-center gap-3">
-              <span className="w-32 shrink-0 text-sm text-gray-600">{field.name}</span>
+              <span className="w-32 shrink-0 text-sm text-gray-600 dark:text-gray-400">{field.name}</span>
               {field.field_type === "text" && (
                 <Input
                   defaultValue={(current?.text as string) ?? ""}
@@ -60,7 +60,7 @@ export function CardCustomFields({ boardId, cardId }: { boardId: string; cardId:
               )}
               {field.field_type === "dropdown" && (
                 <select
-                  className="rounded border border-gray-300 px-2 py-1 text-sm"
+                  className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
                   value={(current?.option_id as string) ?? ""}
                   onChange={(e) => upsert.mutate({ fieldId: field.id, value: { option_id: e.target.value } })}
                 >

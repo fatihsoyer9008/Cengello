@@ -56,10 +56,10 @@ export default function WorkspaceMembersPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
-      <Link href={`/workspaces/${workspaceId}/boards`} className="text-sm text-gray-500 hover:underline">
+      <Link href={`/workspaces/${workspaceId}/boards`} className="text-sm text-gray-500 hover:underline dark:text-gray-400">
         ← Boards
       </Link>
-      <h1 className="mt-1 text-xl font-semibold text-gray-900">Workspace members</h1>
+      <h1 className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">Workspace members</h1>
 
       <form
         onSubmit={(e) => {
@@ -73,15 +73,15 @@ export default function WorkspaceMembersPage() {
           Invite
         </Button>
       </form>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-      <ul className="mt-6 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white">
+      <ul className="mt-6 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
         {members?.map((member) => (
           <li key={member.id} className="flex items-center justify-between px-4 py-3">
-            <span className="text-sm text-gray-800">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
+            <span className="text-sm text-gray-800 dark:text-gray-200">{userDetails?.[member.user_id]?.email ?? member.user_id}</span>
             <div className="flex items-center gap-2">
               <select
-                className="rounded border border-gray-300 px-2 py-1 text-sm"
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                 value={member.role}
                 onChange={(e) => updateRole.mutate({ memberId: member.id, role: e.target.value as WorkspaceRole })}
               >

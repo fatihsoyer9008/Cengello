@@ -55,17 +55,17 @@ export function CardChecklists({ cardId }: { cardId: string }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm font-medium text-gray-600">Checklists</p>
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Checklists</p>
       {checklists?.map((checklist) => (
-        <div key={checklist.id} className="rounded-md border border-gray-200 p-3">
+        <div key={checklist.id} className="rounded-md border border-gray-200 p-3 dark:border-gray-700">
           <div className="mb-1 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-gray-800">{checklist.title}</h4>
-            <button onClick={() => deleteChecklist.mutate(checklist.id)} className="text-xs text-gray-400 hover:text-red-600">
+            <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-100">{checklist.title}</h4>
+            <button onClick={() => deleteChecklist.mutate(checklist.id)} className="text-xs text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400">
               Delete
             </button>
           </div>
           <div className="mb-2 flex items-center gap-2">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
               {checklist.completed_count}/{checklist.total_count}
             </span>
             <ProgressBar value={checklist.total_count ? checklist.completed_count / checklist.total_count : 0} />
@@ -78,10 +78,10 @@ export function CardChecklists({ cardId }: { cardId: string }) {
                   checked={item.is_complete}
                   onChange={(e) => toggleItem.mutate({ itemId: item.id, isComplete: e.target.checked })}
                 />
-                <span className={item.is_complete ? "flex-1 text-gray-400 line-through" : "flex-1 text-gray-800"}>
+                <span className={item.is_complete ? "flex-1 text-gray-400 line-through dark:text-gray-500" : "flex-1 text-gray-800 dark:text-gray-200"}>
                   {item.text}
                 </span>
-                <button onClick={() => deleteItem.mutate(item.id)} className="text-xs text-gray-300 hover:text-red-600">
+                <button onClick={() => deleteItem.mutate(item.id)} className="text-xs text-gray-300 hover:text-red-600 dark:text-gray-600 dark:hover:text-red-400">
                   ×
                 </button>
               </li>
@@ -103,7 +103,7 @@ export function CardChecklists({ cardId }: { cardId: string }) {
               </Button>
             </form>
           ) : (
-            <button onClick={() => setAddingTo(checklist.id)} className="mt-2 text-xs text-gray-500 hover:text-gray-800">
+            <button onClick={() => setAddingTo(checklist.id)} className="mt-2 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">
               + Add item
             </button>
           )}

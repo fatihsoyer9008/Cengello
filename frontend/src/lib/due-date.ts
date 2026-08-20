@@ -13,10 +13,10 @@ export function getDueState(dueDate: string | null, dueCompleted: boolean): DueS
 
 export const DUE_STATE_CLASSES: Record<DueState, string> = {
   none: "",
-  complete: "bg-green-100 text-green-800 border-green-300",
-  overdue: "bg-red-100 text-red-800 border-red-300",
-  "due-soon": "bg-amber-100 text-amber-800 border-amber-300",
-  upcoming: "bg-gray-100 text-gray-700 border-gray-300",
+  complete: "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-300 dark:border-green-700",
+  overdue: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/40 dark:text-red-300 dark:border-red-700",
+  "due-soon": "bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700",
+  upcoming: "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600",
 };
 
 export function formatDueDate(dueDate: string): string {

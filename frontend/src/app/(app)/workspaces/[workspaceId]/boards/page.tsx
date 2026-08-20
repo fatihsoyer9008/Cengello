@@ -26,10 +26,10 @@ export default function BoardsPage() {
     <main className="mx-auto max-w-5xl px-4 py-8">
       <div className="mb-1 flex items-center justify-between">
         <div>
-          <Link href="/workspaces" className="text-sm text-gray-500 hover:underline">
+          <Link href="/workspaces" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
             ← Workspaces
           </Link>
-          <h1 className="text-xl font-semibold text-gray-900">{workspace?.name ?? "Boards"}</h1>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{workspace?.name ?? "Boards"}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Link href={`/workspaces/${workspaceId}/members`}>
@@ -39,8 +39,8 @@ export default function BoardsPage() {
         </div>
       </div>
 
-      {isLoading && <p className="mt-6 text-gray-500">Loading…</p>}
-      {!isLoading && boards?.length === 0 && <p className="mt-6 text-gray-500">No boards yet.</p>}
+      {isLoading && <p className="mt-6 text-gray-500 dark:text-gray-400">Loading…</p>}
+      {!isLoading && boards?.length === 0 && <p className="mt-6 text-gray-500 dark:text-gray-400">No boards yet.</p>}
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         {boards?.map((board) => (

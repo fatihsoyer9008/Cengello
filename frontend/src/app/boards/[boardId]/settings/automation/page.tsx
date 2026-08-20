@@ -12,7 +12,7 @@ export default function AutomationSettingsPage() {
     <AppShell boardId={boardId} title="Board settings">
       <main className="mx-auto max-w-3xl px-4 py-6">
         <BoardSettingsNav boardId={boardId} />
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">Automation rules</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Automation rules</h2>
         <AutomationRuleEditor boardId={boardId} />
       </main>
     </AppShell>
