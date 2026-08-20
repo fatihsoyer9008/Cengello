@@ -22,7 +22,7 @@
 
 **Cengello**, sıfırdan bir öğrenme projesi ve portföy çalışması olarak inşa edilmiş, full-stack, kendi sunucunda barındırdığın bir proje yönetim aracıdır. Modern bir Kanban aracının temel iş akışını yeniden üretir — çalışma alanları, panolar, renkli listeler, sürüklenebilir kartlar, kontrol listeleri, etiketler, bitiş tarihleri, ekler ve canlı bir etkinlik akışı — hepsi kendi Docker Compose yığınının arkasında.
 
-Gerçek bir production mimarisiyle inşa edildi: PostgreSQL ve Alembic migration'ları ile desteklenen tip güvenli bir FastAPI backend, Tailwind CSS ile stillendirilmiş bir Next.js/React frontend, ve bir Hetzner VPS üzerinde Caddy arkasında deploy edilmeye hazır bir Docker Compose kurulumu.
+Gerçek bir production mimarisiyle inşa edildi: PostgreSQL ve Alembic migration'ları ile desteklenen tip güvenli bir FastAPI backend, Tailwind CSS ile stillendirilmiş bir Next.js/React frontend — hepsi Docker Compose ile birbirine bağlı, böylece herkes birkaç komutla kendi bilgisayarında tüm yığını ayağa kaldırabilir. Kayıt olunacak barındırılan bir sürüm yok; kendin çalıştırırsın.
 
 > 🖼️ **Ekran Görüntüsü / Demo**
 >
@@ -68,9 +68,7 @@ Gerçek bir production mimarisiyle inşa edildi: PostgreSQL ve Alembic migration
 - 🧪 Test paketi için `pytest` + `httpx`
 
 **DevOps / Altyapı**
-- 🐳 Yerel geliştirme ve deploy için **Docker & Docker Compose**
-- 🌐 Otomatik HTTPS'li reverse proxy olarak **Caddy** (production)
-- ☁️ Bir **Hetzner VPS**'de (veya Docker destekleyen herhangi bir sunucuda) deploy için optimize edilmiş
+- 🐳 **Docker & Docker Compose** — tüm yığın (frontend, backend, veritabanı) tek komutla çalışır
 
 ---
 
@@ -105,13 +103,10 @@ JWT_SECRET_KEY=change-me-to-a-long-random-value
 JWT_ACCESS_TTL_MIN=20
 JWT_REFRESH_TTL_DAYS=30
 
-# yerel http geliştirme için false, HTTPS arkasında production için true (varsayılan)
-COOKIE_SECURE=true
+# yerel geliştirme düz http üzerinden çalışır, o yüzden false kalır
+COOKIE_SECURE=false
 
 NEXT_PUBLIC_API_URL=http://localhost:8000
-
-# sadece production (docker-compose.prod.yml + Caddy)
-DOMAIN=example.com
 ```
 
 > ⚠️ **Gerçek `.env` dosyanı asla commit'leme.** Zaten `.gitignore` kapsamında — push'lamadan önce iki kez kontrol et.
@@ -156,32 +151,13 @@ docker compose run --rm backend alembic upgrade head
 
 ---
 
-## ☁️ Production Deploy (Hetzner VPS)
-
-```bash
-cp .env.example .env   # gerçek secret'ları ve DOMAIN'ini ayarla
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-docker compose run --rm backend alembic upgrade head
-```
-
-`docker-compose.prod.yml`, production image'ları build eder (kaynak bind-mount'u yok), `restart: unless-stopped` ayarlar ve `DOMAIN`'in üzerinden otomatik HTTPS ile frontend/backend'in önüne bir **Caddy** reverse proxy ekler.
-
-### 👥 Bir takımla tek veritabanını paylaşmak
-
-Herkesin kendi yerel Postgres'i olması yerine bir takım arkadaşının aynı veriler üzerinde geliştirme yapmasını mı istiyorsun? VPS'indeki paylaşılan bir Postgres örneğine SSH üzerinden tünel açmak için (`5432`'yi internete açmadan) [`docs/remote-database-setup.md`](docs/remote-database-setup.md) dosyasına bak.
-
----
-
 ## 📁 Proje Yapısı
 
 ```
 cengello/
 ├── backend/            FastAPI uygulaması, SQLAlchemy modelleri, Alembic migration'ları, pytest paketi
 ├── frontend/           Next.js uygulaması (App Router), Tailwind CSS, React Query
-├── infra/              Production reverse proxy için Caddyfile
-├── docs/               Ek rehberler (örn. remote-database-setup.md)
 ├── docker-compose.yml
-├── docker-compose.prod.yml
 ├── .env.example
 └── LICENSE
 ```
