@@ -8,10 +8,14 @@ from app.core.exceptions import BadRequestError, ConflictError, ForbiddenError, 
 from app.models.board import Board, BoardMember
 from app.models.board_invite import BoardInviteLink
 from app.models.enums import BoardRole, WorkspaceRole
+from app.models.list import List
 from app.models.user import User
 from app.models.workspace import WorkspaceMember
 from app.schemas.board import BoardCreate, BoardJoinResult, BoardMemberCreate, BoardMemberUpdate, BoardUpdate
+from app.services.ordering import GAP
 from app.services.user_service import get_user_by_email
+
+DEFAULT_LIST_NAMES = ["Yapılacaklar", "Yapılıyor", "Tamamlandı"]
 
 
 def create_board(db: Session, actor: User, data: BoardCreate) -> Board:
@@ -27,6 +31,8 @@ def create_board(db: Session, actor: User, data: BoardCreate) -> Board:
     db.add(board)
     db.flush()
     db.add(BoardMember(board_id=board.id, user_id=actor.id, role=BoardRole.admin))
+    for index, name in enumerate(DEFAULT_LIST_NAMES, start=1):
+        db.add(List(board_id=board.id, name=name, position=GAP * index))
     db.commit()
     db.refresh(board)
     return board
