@@ -54,11 +54,26 @@ def assert_workspace_role(db: Session, user_id: uuid.UUID, workspace_id: uuid.UU
     return membership
 
 
-def assert_board_role(db: Session, user_id: uuid.UUID, board_id: uuid.UUID, min_role: BoardRole) -> BoardMember:
+def assert_board_role(db: Session, user_id: uuid.UUID, board_id: uuid.UUID, min_role: BoardRole) -> BoardMember | None:
     membership = db.query(BoardMember).filter_by(board_id=board_id, user_id=user_id).one_or_none()
-    if membership is None or _BOARD_ROLE_RANK[membership.role] < _BOARD_ROLE_RANK[min_role]:
-        raise ForbiddenError("Insufficient board role")
-    return membership
+    if membership is not None and _BOARD_ROLE_RANK[membership.role] >= _BOARD_ROLE_RANK[min_role]:
+        return membership
+
+    # Workspace admins/owners implicitly have full access to every board in
+    # their workspace (list_workspace_boards already surfaces all of them),
+    # even without an explicit BoardMember row.
+    board = db.get(Board, board_id)
+    if board is not None:
+        workspace_membership = (
+            db.query(WorkspaceMember).filter_by(workspace_id=board.workspace_id, user_id=user_id).one_or_none()
+        )
+        if (
+            workspace_membership is not None
+            and _WORKSPACE_ROLE_RANK[workspace_membership.role] >= _WORKSPACE_ROLE_RANK[WorkspaceRole.admin]
+        ):
+            return membership
+
+    raise ForbiddenError("Insufficient board role")
 
 
 def require_workspace_role(min_role: WorkspaceRole):

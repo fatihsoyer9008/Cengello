@@ -4,12 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import { BoardBottomNav, type BoardTab } from "@/components/board/BoardBottomNav";
 import { BoardTopBar } from "@/components/board/BoardTopBar";
 import { BoardView } from "@/components/board/BoardView";
 import { InboxPanel } from "@/components/board/InboxPanel";
 import { CardDetailModal } from "@/components/card-modal/CardDetailModal";
 import { boardsApi } from "@/lib/api/boards";
+import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/auth-context";
 import { getBoardStyle } from "@/lib/board-theme";
 import { pushRecentBoard } from "@/lib/recent-boards";
@@ -30,13 +33,30 @@ export default function BoardPage() {
     if (boardId) pushRecentBoard(boardId);
   }, [boardId]);
 
-  const { data: board } = useQuery({
+  const {
+    data: board,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["boards", boardId],
     queryFn: () => boardsApi.get(boardId),
     enabled: !!boardId,
   });
 
   const cardId = searchParams.get("card");
+
+  if (status === "authenticated" && isError) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#1d2125] px-4 text-center">
+        <p className="text-gray-300">
+          {error instanceof ApiError ? String(error.detail) : "Bu pano yüklenemedi."}
+        </p>
+        <Link href="/workspaces" className="text-sm text-blue-400 hover:underline">
+          Çalışma alanlarına dön
+        </Link>
+      </main>
+    );
+  }
 
   if (status !== "authenticated" || !board) {
     return (
