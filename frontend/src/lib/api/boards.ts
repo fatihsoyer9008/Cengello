@@ -37,8 +37,14 @@ export const boardsApi = {
   labels: (id: string) => apiFetch<Label[]>(`/boards/${id}/labels`),
   customFields: (id: string) => apiFetch<CustomField[]>(`/boards/${id}/custom-fields`),
   automationRules: (id: string) => apiFetch<AutomationRule[]>(`/boards/${id}/automation-rules`),
-  activity: (id: string, cardId?: string, limit = 50) =>
-    apiFetch<ActivityLogEntry[]>(`/boards/${id}/activity${toQuery({ card_id: cardId, limit: String(limit) })}`),
+  activity: (id: string, filters: { cardId?: string; actorId?: string; limit?: number } = {}) =>
+    apiFetch<ActivityLogEntry[]>(
+      `/boards/${id}/activity${toQuery({
+        card_id: filters.cardId,
+        actor_id: filters.actorId,
+        limit: String(filters.limit ?? 50),
+      })}`
+    ),
   setStarred: (id: string, is_starred: boolean) =>
     apiFetch<BoardMember>(`/boards/${id}/star`, { method: "PATCH", body: JSON.stringify({ is_starred }) }),
   members: (id: string) => apiFetch<BoardMember[]>(`/boards/${id}/members`),
