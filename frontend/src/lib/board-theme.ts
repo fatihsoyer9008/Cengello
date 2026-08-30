@@ -110,6 +110,38 @@ export const BOARD_BACKGROUND_OPTIONS: BoardBackgroundOption[] = [
   },
 ];
 
+const BOARD_IMAGE_ACCENTS: Record<string, string> = {
+  [BOARD_IMAGE_BASE.lake]: "#0E7C61",
+  [BOARD_IMAGE_BASE.purple]: "#7C3AED",
+  [BOARD_IMAGE_BASE.space]: "#4338CA",
+  [BOARD_IMAGE_BASE.rain]: "#475569",
+};
+
+const DEFAULT_ACCENT_COLOR = "#0079BF";
+
+function firstHexColorIn(value: string): string | null {
+  const match = value.match(/#(?:[0-9a-fA-F]{3,8})/);
+  return match ? match[0] : null;
+}
+
+/** Representative accent color for a board's background/template, used e.g. for the browser tab favicon. */
+export function getBoardAccentColor(board: { id: string; background?: string | null }): string {
+  const bg = board.background;
+  if (!bg) {
+    const gradient = BOARD_GRADIENTS[hash(board.id) % BOARD_GRADIENTS.length];
+    return firstHexColorIn(gradient) ?? DEFAULT_ACCENT_COLOR;
+  }
+  if (bg.startsWith("http")) {
+    const match = Object.entries(BOARD_IMAGE_ACCENTS).find(([baseUrl]) => bg.startsWith(baseUrl));
+    return match?.[1] ?? DEFAULT_ACCENT_COLOR;
+  }
+  if (bg.startsWith("linear-gradient") || bg.startsWith("radial-gradient")) {
+    return firstHexColorIn(bg) ?? DEFAULT_ACCENT_COLOR;
+  }
+  if (bg.startsWith("#")) return bg;
+  return DEFAULT_ACCENT_COLOR;
+}
+
 export function getBoardStyle(board: { id: string; background?: string | null }): CSSProperties {
   const bg = board.background;
   if (bg) {

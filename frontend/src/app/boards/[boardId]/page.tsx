@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { BoardBottomNav, type BoardTab } from "@/components/board/BoardBottomNav";
+import { BoardFavicon } from "@/components/board/BoardFavicon";
 import { BoardTopBar } from "@/components/board/BoardTopBar";
 import { BoardView } from "@/components/board/BoardView";
 import { InboxPanel } from "@/components/board/InboxPanel";
@@ -14,7 +15,7 @@ import { CardDetailModal } from "@/components/card-modal/CardDetailModal";
 import { boardsApi } from "@/lib/api/boards";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/auth-context";
-import { getBoardStyle } from "@/lib/board-theme";
+import { getBoardAccentColor, getBoardStyle } from "@/lib/board-theme";
 import { pushRecentBoard } from "@/lib/recent-boards";
 
 export default function BoardPage() {
@@ -68,6 +69,7 @@ export default function BoardPage() {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden" style={getBoardStyle(board)}>
+      <BoardFavicon color={getBoardAccentColor(board)} />
       <BoardTopBar board={board} />
 
       <div className="flex flex-1 overflow-hidden">
