@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { BoardMembersManager } from "@/components/admin/BoardMembersManager";
+import { MemberProfilePopover } from "@/components/board/MemberProfilePopover";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { DropdownMenu } from "@/components/ui/DropdownMenu";
@@ -103,8 +104,8 @@ export function BoardTopBar({ board }: { board: Board }) {
     onSuccess: () => router.push("/workspaces"),
   });
 
-  const visibleMemberIds = memberIds.slice(0, MAX_AVATARS);
-  const overflow = memberIds.length - visibleMemberIds.length;
+  const visibleMembers = (members ?? []).slice(0, MAX_AVATARS);
+  const overflow = memberIds.length - visibleMembers.length;
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b border-white/10 bg-black/20 px-4">
@@ -119,14 +120,22 @@ export function BoardTopBar({ board }: { board: Board }) {
       <div className="flex-1" />
 
       <div className="hidden -space-x-1.5 md:flex">
-        {visibleMemberIds.map((id) => (
-          <span
-            key={id}
-            title={usersById.get(id)?.full_name}
-            className={`flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#1d2125] text-[10px] font-bold text-white ${getUserColor(id)}`}
-          >
-            {usersById.get(id) ? initials(usersById.get(id)!.full_name) : "?"}
-          </span>
+        {visibleMembers.map((member) => (
+          <MemberProfilePopover
+            key={member.id}
+            boardId={board.id}
+            member={member}
+            user={usersById.get(member.user_id)}
+            ownerId={board.created_by}
+            trigger={
+              <button
+                title={usersById.get(member.user_id)?.full_name}
+                className={`flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#1d2125] text-[10px] font-bold text-white transition hover:brightness-110 ${getUserColor(member.user_id)}`}
+              >
+                {usersById.get(member.user_id) ? initials(usersById.get(member.user_id)!.full_name) : "?"}
+              </button>
+            }
+          />
         ))}
         {overflow > 0 && (
           <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#1d2125] bg-gray-600 text-[10px] font-bold text-white">

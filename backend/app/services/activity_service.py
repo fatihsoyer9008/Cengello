@@ -29,11 +29,17 @@ def log_activity(
 
 
 def list_board_activity(
-    db: Session, board_id: uuid.UUID, card_id: uuid.UUID | None = None, limit: int = 50
+    db: Session,
+    board_id: uuid.UUID,
+    card_id: uuid.UUID | None = None,
+    actor_id: uuid.UUID | None = None,
+    limit: int = 50,
 ) -> list[ActivityLog]:
     query = db.query(ActivityLog).filter(ActivityLog.board_id == board_id)
     if card_id is not None:
         query = query.filter(ActivityLog.card_id == card_id)
+    if actor_id is not None:
+        query = query.filter(ActivityLog.actor_id == actor_id)
     return query.order_by(ActivityLog.created_at.desc()).limit(limit).all()
 
 

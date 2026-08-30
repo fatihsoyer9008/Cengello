@@ -155,6 +155,8 @@ def join_via_token(db: Session, actor: User, token: str) -> BoardJoinResult:
         if workspace_membership is None:
             db.add(WorkspaceMember(workspace_id=board.workspace_id, user_id=actor.id, role=WorkspaceRole.member))
 
-    db.add(BoardMember(board_id=link.board_id, user_id=actor.id, role=BoardRole.member))
+    # New joiners from an invite link start as a viewer -- the board owner/admins
+    # explicitly promote them once they know who they are.
+    db.add(BoardMember(board_id=link.board_id, user_id=actor.id, role=BoardRole.viewer))
     db.commit()
     return BoardJoinResult(board_id=link.board_id, already_member=False)
