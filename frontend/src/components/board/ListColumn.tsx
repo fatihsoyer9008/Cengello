@@ -143,7 +143,7 @@ export function ListColumn({ boardId, list, cards }: { boardId: string; list: Bo
         </Popover>
       </div>
 
-      <div ref={setDroppableRef} className="flex-1 space-y-2 px-2.5 pb-2 pt-1">
+      <div ref={setDroppableRef} className="min-h-16 flex-1 space-y-2 px-2.5 pb-2 pt-1">
         <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
           {cards.map((card) => (
             <CardTile key={card.id} boardId={boardId} card={card} />
