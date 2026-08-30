@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Bell, HelpCircle, LayoutGrid, Moon, Plus, Search, Sun } from "lucide-react";
+import { Bell, HelpCircle, LayoutGrid, Menu, Moon, Plus, Search, Sun } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,7 +23,7 @@ function initials(fullName: string): string {
     .toUpperCase();
 }
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick: () => void }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
@@ -46,14 +46,22 @@ export function Header() {
     "inline-flex shrink-0 items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50";
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-gray-200 bg-white px-4 dark:border-white/10 dark:bg-[#1d2125]">
+    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-3 dark:border-white/10 dark:bg-[#1d2125] sm:gap-3 sm:px-4">
+      <button
+        onClick={onMenuClick}
+        className="shrink-0 rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 md:hidden"
+        aria-label="Menü"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
       <Link href="/workspaces" className="flex shrink-0 items-center gap-2 text-gray-900 dark:text-gray-100">
         <LayoutGrid className="h-6 w-6 text-brand" />
-        <span className="text-lg font-bold tracking-tight">Cengello</span>
+        <span className="hidden text-lg font-bold tracking-tight sm:inline">Cengello</span>
       </Link>
 
       <div className="flex flex-1 items-center justify-center gap-2 px-2">
-        <div className="relative w-full max-w-md">
+        <div className="relative hidden w-full max-w-md md:block">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input
             placeholder="Arama"
@@ -64,9 +72,9 @@ export function Header() {
         {workspaces && workspaces.length > 1 ? (
           <DropdownMenu
             trigger={
-              <button className={createButtonClass}>
+              <button className={createButtonClass} aria-label="Oluştur">
                 <Plus className="h-4 w-4" />
-                Oluştur
+                <span className="hidden sm:inline">Oluştur</span>
               </button>
             }
             items={workspaces.map((ws) => ({ label: ws.name, onSelect: () => setCreateTarget(ws.id) }))}
@@ -74,11 +82,12 @@ export function Header() {
         ) : (
           <button
             className={createButtonClass}
+            aria-label="Oluştur"
             disabled={!workspaces || workspaces.length === 0}
             onClick={() => workspaces?.[0] && setCreateTarget(workspaces[0].id)}
           >
             <Plus className="h-4 w-4" />
-            Oluştur
+            <span className="hidden sm:inline">Oluştur</span>
           </button>
         )}
       </div>
@@ -98,7 +107,7 @@ export function Header() {
           <Bell className="h-[18px] w-[18px]" />
         </button>
         <button
-          className="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10"
+          className="hidden rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 md:block"
           aria-label="Yardım"
         >
           <HelpCircle className="h-[18px] w-[18px]" />

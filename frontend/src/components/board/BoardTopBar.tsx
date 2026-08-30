@@ -118,7 +118,7 @@ export function BoardTopBar({ board }: { board: Board }) {
 
       <div className="flex-1" />
 
-      <div className="flex -space-x-1.5">
+      <div className="hidden -space-x-1.5 md:flex">
         {visibleMemberIds.map((id) => (
           <span
             key={id}
@@ -135,12 +135,12 @@ export function BoardTopBar({ board }: { board: Board }) {
         )}
       </div>
 
-      <button className="rounded p-1.5 text-white/70 hover:bg-white/10 hover:text-white" aria-label="Bildirimler">
+      <button className="hidden rounded p-1.5 text-white/70 hover:bg-white/10 hover:text-white md:block" aria-label="Bildirimler">
         <Bell className="h-4 w-4" />
       </button>
       <Link
         href={`/boards/${board.id}/settings/labels`}
-        className="rounded p-1.5 text-white/70 hover:bg-white/10 hover:text-white"
+        className="hidden rounded p-1.5 text-white/70 hover:bg-white/10 hover:text-white md:block"
         aria-label="Pano ayarları"
       >
         <Settings className="h-4 w-4" />
@@ -154,10 +154,11 @@ export function BoardTopBar({ board }: { board: Board }) {
       </button>
       <button
         onClick={() => setShareOpen(true)}
+        aria-label="Paylaş"
         className="inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-white/20"
       >
         <Share2 className="h-3.5 w-3.5" />
-        Paylaş
+        <span className="hidden sm:inline">Paylaş</span>
       </button>
       <DropdownMenu
         trigger={
