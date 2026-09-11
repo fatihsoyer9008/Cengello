@@ -20,6 +20,9 @@ class Settings(BaseSettings):
 
     cookie_secure: bool = True
 
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.5-flash-lite"
+
     @property
     def database_url(self) -> str:
         return (
