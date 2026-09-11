@@ -32,6 +32,8 @@ Gerçek bir production mimarisiyle inşa edildi: PostgreSQL ve Alembic migration
 
 ## ✨ Öne Çıkan Özellikler
 
+- ✨ **Gemini görev önerileri** — kart başlığı ve açıklamasından Gemini 3.5 Flash-Lite ile Türkçe adımlar üretir. [Kurulum rehberi](docs/gemini-setup.md).
+
 - 🗃️ **Çalışma Alanları & Panolar** — panoları rol tabanlı üyelikle (owner / admin / member) takım çalışma alanlarında organize et.
 - 📌 **Kanban Pano Görünümü** — renkli, sürüklenebilir listeler ve kartlar, `dnd-kit` ile canlı sürükle-bırak sıralama.
 - 🎨 **Özel Pano Arka Planları & Görünürlük** — canlı önizlemeyle yüksek çözünürlüklü bir fotoğraf arka planı veya gradyan seç, her panoyu gizli, çalışma alanına özel veya herkese açık yap.

@@ -32,6 +32,8 @@ It's built with a real production-style architecture: a typed FastAPI backend ba
 
 ## ✨ Key Features
 
+- ✨ **Gemini task suggestions** — get Turkish action steps from a card's title and description with Gemini 3.5 Flash-Lite. See [setup](docs/gemini-setup.md).
+
 - 🗃️ **Workspaces & Boards** — organize boards into team workspaces with role-based membership (owner / admin / member).
 - 📌 **Kanban Board View** — colored, draggable lists and cards with live drag-and-drop reordering (powered by `dnd-kit`).
 - 🎨 **Custom Board Backgrounds & Visibility** — pick a high-res photo background or a gradient with a live preview, and set each board to private, workspace-visible, or public.

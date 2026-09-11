@@ -6,6 +6,7 @@ import type { TemplateCaptureCardRequest, Template } from "@/types/template";
 import type { User } from "@/types/user";
 
 export const cardsApi = {
+  suggestions: (id: string) => apiFetch<{ summary: string; steps: string[]; considerations: string[] }>(`/cards/${id}/suggestions`, { method: "POST" }),
   create: (data: CardCreate) => apiFetch<Card>("/cards", { method: "POST", body: JSON.stringify(data) }),
   get: (id: string) => apiFetch<Card>(`/cards/${id}`),
   update: (id: string, data: CardUpdate) => apiFetch<Card>(`/cards/${id}`, { method: "PATCH", body: JSON.stringify(data) }),

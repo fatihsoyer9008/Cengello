@@ -7,6 +7,7 @@ import { CardChecklists } from "@/components/card-modal/CardChecklists";
 import { CardCommentsAndActivity } from "@/components/card-modal/CardCommentsAndActivity";
 import { CardCustomFields } from "@/components/card-modal/CardCustomFields";
 import { CardDescription } from "@/components/card-modal/CardDescription";
+import { CardSuggestions } from "@/components/card-modal/CardSuggestions";
 import { CardDetailHeader } from "@/components/card-modal/CardDetailHeader";
 import { CardDetailMeta } from "@/components/card-modal/CardDetailMeta";
 import { CardModalTopBar } from "@/components/card-modal/CardModalTopBar";
@@ -38,6 +39,7 @@ export function CardDetailModal({ boardId, cardId, onClose }: { boardId: string;
                     <CardQuickActions boardId={boardId} card={card} />
                     <CardDetailMeta boardId={boardId} card={card} />
                     <CardDescription card={card} />
+                    <CardSuggestions key={`${card.id}:${card.title}:${card.description}`} cardId={card.id} />
                     <CardChecklists cardId={card.id} />
                     <CardCustomFields boardId={boardId} cardId={card.id} />
                     <CardAttachments boardId={boardId} card={card} />

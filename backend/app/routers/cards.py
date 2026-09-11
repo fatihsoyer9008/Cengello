@@ -20,9 +20,16 @@ from app.schemas.card import (
 from app.schemas.label import LabelRead
 from app.schemas.template import TemplateCaptureCardRequest, TemplateRead
 from app.schemas.user import UserRead
+from app.schemas.suggestion import CardSuggestions
+from app.services.suggestion_service import suggest_for_card
 from app.services import activity_service, card_service, template_service
 
 router = APIRouter(tags=["cards"])
+
+
+@router.post("/cards/{card_id}/suggestions", response_model=CardSuggestions)
+def suggest_card(card: Card = Depends(get_card_and_check_role(BoardRole.member))):
+    return suggest_for_card(card)
 
 
 @router.post("/cards", response_model=CardRead, status_code=201)
